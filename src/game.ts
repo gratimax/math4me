@@ -1,5 +1,5 @@
 
-class Game {
+export class Game {
   constructor(public id: string) {
   }
 }

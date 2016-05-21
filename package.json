@@ -5,10 +5,11 @@
     "socket.io": "^1.4.6"
   },
   "scripts": {
-    "run": "tsc && node dist/index.js",
+    "run": "tsc && browserify dist/client.js -o public/bundle.js && node dist/index.js",
     "setup": "npm install && tsd install"
   },
   "devDependencies": {
+    "browserify": "^13.0.1",
     "tsd": "^0.6.5",
     "typescript": "^1.8.10"
   }
