@@ -3,7 +3,7 @@
     "socket.io": "^1.4.6"
   },
   "scripts": {
-    "build": "tsc",
+    "run": "tsc && node dist/index.js",
     "setup": "npm install && typings install"
   },
   "devDependencies": {
