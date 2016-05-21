@@ -1,4 +1,4 @@
-var http = require('http');
+import http = require('http');
 
 var serve = http.createServer(function (req, res) {
   res.write('Hello!');
