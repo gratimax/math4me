@@ -6,10 +6,10 @@
   },
   "scripts": {
     "run": "tsc && node dist/index.js",
-    "setup": "npm install && typings install"
+    "setup": "npm install && tsd install"
   },
   "devDependencies": {
-    "typescript": "^1.8.10",
-    "typings": "^1.0.4"
+    "tsd": "^0.6.5",
+    "typescript": "^1.8.10"
   }
 }
