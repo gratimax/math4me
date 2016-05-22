@@ -24,7 +24,7 @@ export class Problem {
   }
 
   isRight(expr: string): boolean {
-    var toks = expr.replace("(", "( ").replace(")", ") ").split(" ");
+    var toks = expr.split(" ");
     var given = this.given.slice(0);
     var match;
     try {
@@ -43,7 +43,7 @@ export class Problem {
               return false;
             else
               given.splice(index, 1);
-          } else if(this.ops.indexOf(tok) == -1) {
+          } else if(tok != "(" && tok != ")" && this.ops.indexOf(tok) == -1) {
             return false;
           }
         }
