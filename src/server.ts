@@ -14,8 +14,10 @@ app.get('/:id/', function (req, res) {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-let serve = app.listen(3000, () => {
-  console.log("Started server on port 3000");
+let port = process.env['PORT'] || 3000;
+
+let serve = app.listen(port, () => {
+  console.log(`Started server on port ${port}`);
 });
 
 let io = socketio(serve);
