@@ -4,7 +4,7 @@ export class StartingGame implements GameRole {
 }
 
 export class JoiningGame implements GameRole {
-  constructor(public id: String) {}
+  constructor(public id: number) {}
 }
 
 export function create(): GameRole {
@@ -12,6 +12,6 @@ export function create(): GameRole {
   if (pathname == '/') {
     return new StartingGame();
   } else {
-    return new JoiningGame(pathname.substr(1));
+    return new JoiningGame(parseInt(pathname.substr(1)));
   }
 }

@@ -26,16 +26,21 @@ let io = socketio(serve);
 io.on('connection', function (socket) {
   let socketGame: game.Game = null;
 
-  socket.on('createGame', function () {
+  socket.on('createGame', function (data) {
     var newGame = new game.Game();
     game.addGame(newGame);
     socket.emit('createdGame', {id: newGame.id});
+    console.log('joining to room ' + newGame.getRoom());
+    socket.join(newGame.getRoom());
+    let user = newGame.addUser(data.name);
+    socketGame = newGame;
+    socket.emit('joinedGame', {userId: user.id, name: data.name});
   });
 
   socket.on('joinGame', function (data) {
     // expects id, name
     let id: number = data.id;
-    if (game.hasId(id)) {
+    if (!game.hasId(id)) {
       socket.emit('didNotJoinGame', {reason: 'game did not exist'});
     } else {
       let joinGame = game.getById(id);
@@ -43,17 +48,20 @@ io.on('connection', function (socket) {
         socket.emit('didNotJoinGame', {reason: 'game is closed'});
       } else {
         socketGame = joinGame;
+        console.log('joining to room ' + joinGame.getRoom());
         socket.join(joinGame.getRoom());
         let user = joinGame.addUser(data.name);
-        socket.emit('joinedGame');
-        io.to(joinGame.getRoom()).emit('userJoined', {userId: user.id});
+        socket.emit('joinedGame', {userId: user.id, name: data.name});
+        io.to(joinGame.getRoom()).emit('userJoined', {userId: user.id, name: data.name});
       }
     }
   });
 
   socket.on('startGame', function () {
+    console.log('startGame');
     let timer = null;
     function doTick() {
+      console.log('tick game' + socketGame.id);
       if (socketGame.canMakeProblem()) {
         let prob = socketGame.makeProblem();
         io.to(socketGame.getRoom()).emit('newProblem', {given: prob.given, goal: prob.goal});
@@ -63,9 +71,11 @@ io.on('connection', function (socket) {
         io.to(socketGame.getRoom()).emit('finishedGame');
       }
     }
+    console.log('socketGame: ' + socketGame);
     if (socketGame) {
+      console.log('ticking!');
       doTick();
-      timer = setInterval(doTick, 30 * 60);
+      timer = setInterval(doTick, 1000);
     }
   });
 

@@ -18,7 +18,6 @@ export default class GameUI extends React.Component<{}, GameUIState> {
   }
 
   componentDidMount() {
-    this.state.name = prompt("Enter a name!");
     this.setState(this.state);
   }
 

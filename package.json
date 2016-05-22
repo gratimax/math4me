@@ -8,7 +8,7 @@
     "mathjs": "~3.2.1"
   },
   "scripts": {
-    "run": "tsc && browserify dist/client.js -o public/bundle.js && node dist/server.js -w src/",
+    "run": "tsc && browserify dist/client.js -o public/bundle.js && DEBUG=socket.io:socket node dist/server.js -w src/",
     "tsc": "tsc",
     "setup": "npm install && tsd install"
   },
