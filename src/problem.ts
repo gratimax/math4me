@@ -33,8 +33,8 @@ export function getProblem(min: number, max:number, n: number, transforms = defa
       nums[i] = logic.getRandomInt(min, max);
     }
     var expr = logic.gen(nums, transforms).toString();
-    var goal = math.eval(expr);
     try {
+      var goal = math.eval(expr);
       return new Problem(goal, nums, expr);
     } catch(e) { }
   }

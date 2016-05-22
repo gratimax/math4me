@@ -58,7 +58,6 @@ io.on('connection', function (socket) {
   });
 
   socket.on('startGame', function () {
-    console.log('startGame');
     let timer = null;
     function doTick() {
       console.log('tick game' + socketGame.id);
@@ -71,9 +70,7 @@ io.on('connection', function (socket) {
         io.to(socketGame.getRoom()).emit('finishedGame');
       }
     }
-    console.log('socketGame: ' + socketGame);
     if (socketGame) {
-      console.log('ticking!');
       doTick();
       timer = setInterval(doTick, 1000);
     }
