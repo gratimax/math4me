@@ -26,14 +26,13 @@ export class Problem {
     var ops = this.ops.slice(0);
     var given = this.given.slice(0);
     var match;
-    try
-    {
+    try {
       match = math.eval(expr) == this.goal;
     } catch(e) {
       return false;
     }
     if(match) {
-      for(var i=0; i<toks; i++) {
+      for(var i=0; i<toks.length; i++) {
         var tok = toks[i];
         if(tok != "") {
           var num = parseInt(tok);
