@@ -34,26 +34,18 @@ class OpToken extends Token {
 		super();
 	}
 	toString(): string {
-		var a = this.prec() > this.t1.prec();
-		var b = this.prec() > this.t2.prec();
-		if(a && b)
-			return "(" + this.t1.toString() + this.op + this.t2.toString() + ")";
-		if(a)
-			return "(" + this.t1.toString() + ")" + this.op + this.t2.toString();
-		if(b)
-			return this.t1.toString() + this.op + "(" + this.t2.toString() + ")";
-		return this.t1.toString() + this.op + this.t2.toString();
+		var leftIsLower = this.prec() > this.t1.prec();
+		var rightIsLower = this.prec() > this.t2.prec();
+		if(leftIsLower && rightIsLower)
+			return `(${this.t1}) ${this.op} (${this.t2})`;
+		if(leftIsLower)
+			return `(${this.t1}) ${this.op} ${this.t2}`;
+		if(rightIsLower)
+			return `${this.t1} ${this.op} (${this.t2})`;
+		return `${this.t1} ${this.op} ${this.t2}`;
 	}
 	prec(): number {
 		return precs[this.op];
-	}
-}
-class BlockToken extends Token {
-	constructor(public tok: Token) {
-		super();
-	}
-	toString(): string {
-		return "(" + this.tok.toString() + ")";
 	}
 }
 
