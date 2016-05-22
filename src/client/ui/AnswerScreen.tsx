@@ -17,7 +17,8 @@ export class AnswerScreen extends React.Component<Props, {}> {
   render() {
     let liGroup = null;
     if (this.props.game.users) {
-      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}/>
+      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}
+        displayCrown={false}/>
     }
     let problem = this.props.problem;
     return (

@@ -15,7 +15,8 @@ export class GameFinishScreen extends React.Component<Props, {}> {
   render() {
     let liGroup = null;
     if (this.props.game.users) {
-      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}/>
+      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}
+        displayCrown={true}/>
     }
     return (
       <div className="row">

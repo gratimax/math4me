@@ -47,7 +47,7 @@ export class Game {
 
   makeProblem(): problem.Problem {
     this.round++;
-    let prob = problem.getProblem(0, 3, 1);
+    let prob = problem.getProblem(constants.MIN_NUM, constants.MAX_NUM, constants.NUM_OPS);
     prob.problemNumber = this.round;
     this.stage = new GameStage.Playing(prob, new Date());
     return prob;

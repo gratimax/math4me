@@ -28,7 +28,6 @@ class Main extends React.Component<{}, {game: ClientGame}> {
     let game = this.state.game;
 
     localStorage['debug'] = '*:socket';
-    console.log(ClientGame.getConnectUrl());
     let socket = window['socket'] = game.socket = SocketIOClient.connect(ClientGame.getConnectUrl());
 
     function onUsers(data: any) {
@@ -106,6 +105,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
     socket.on('userScore', this.onUserScore.bind(this));
     socket.on('finishedGame', (data) => {
       let scores: [[number, number]] = data.scores;
+      console.log(scores);
       for (let i = 0; i < scores.length; i++) {
         let sc = scores[i];
         this.setUserScore(sc[0], sc[1]);

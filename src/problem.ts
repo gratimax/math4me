@@ -32,9 +32,7 @@ export class Problem {
     } catch(e) {
       return false;
     }
-    console.log('still-going');
     if(match) {
-      console.log('checking-toks');
       for(var i=0; i<toks.length; i++) {
         var tok = toks[i];
         if(tok != "") {

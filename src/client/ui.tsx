@@ -21,14 +21,13 @@ export class GameUI extends React.Component<Props, {}> {
   }
 
   render() {
-    console.log(this.props.game instanceof ClientGame);
     let screen = null;
     let s = this.props.game.stage;
     if (s instanceof GameStage.JoinGameFailed) {
       let stage = s as GameStage.JoinGameFailed;
       screen = <RejectedGameScreen reason={stage.reason}/>;
     } else if (s instanceof GameStage.PromptingForName) {
-      screen = <PromptNameGameScreen handler={this.props.handler}/>;
+      screen = <PromptNameGameScreen handler={this.props.handler} gameRole={this.props.game.role}/>;
     } else if (s instanceof GameStage.Waiting) {
       let stage = s as GameStage.Waiting;
       screen = <WaitingGameScreen message={stage.message}/>;

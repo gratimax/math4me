@@ -78,16 +78,22 @@ export class ProblemScreen extends React.Component<Props, State> {
       return s+frac.n.toString()+"/"+frac.d.toString();
   }
 
-  componentWillReceiveProps(props: Props) {
-    this.setState(this.initialState());
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.problem.problemNumber != this.props.problem.problemNumber) {
+      this.setState(this.initialState());
+    }
   }
 
   eval() {
-    try {
-      let expr = this.state.kept.join('');
-      this.props.handler('haveExpr', expr);
-      return ProblemScreen.getFracString(math.eval(expr));
-    } catch (e) {
+    if (this.state.kept.length > 0) {
+      try {
+        let expr = this.state.kept.join('');
+        this.props.handler('haveExpr', expr);
+        return ProblemScreen.getFracString(math.eval(expr));
+      } catch (e) {
+        return "";
+      }
+    } else {
       return "";
     }
   }
@@ -95,7 +101,8 @@ export class ProblemScreen extends React.Component<Props, State> {
   render() {
     let liGroup = null;
     if (this.props.game.users) {
-      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}/>
+      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}
+        displayCrown={false}/>
     }
     let problem = this.props.problem;
     let ops = ['('].concat(problem.ops).concat([')']);

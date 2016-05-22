@@ -26,7 +26,6 @@ io.on('connection', function (socket) {
     var newGame = new game.Game();
     game.addGame(newGame);
     socket.emit('createdGame', {id: newGame.id, numProblems: constants.NUMBER_PROBLEMS});
-    console.log('joining to room ' + newGame.getRoom());
     socket.join(newGame.getRoom());
     let user = newGame.addUser(data.name);
     socketGame = newGame;
@@ -44,7 +43,6 @@ io.on('connection', function (socket) {
         socket.emit('didNotJoinGame', {reason: 'game is closed'});
       } else {
         socketGame = joinGame;
-        console.log('joining to room ' + joinGame.getRoom());
         socket.join(joinGame.getRoom());
         let user = joinGame.addUser(data.name);
         socket.emit('joinedGame', {userId: user.id, name: data.name, numProblems: constants.NUMBER_PROBLEMS});
@@ -64,7 +62,7 @@ io.on('connection', function (socket) {
       } else {
         socketGame.finish();
         let scores = socketGame.users.map((user) => {
-          return [user.id, socketGame.score[user.id]];
+          return [user.id, socketGame.score[user.id] || 0];
         })
         io.to(socketGame.getRoom()).emit('finishedGame', {scores: scores});
       }
@@ -81,7 +79,6 @@ io.on('connection', function (socket) {
   });
 
   socket.on('entered', function (data) {
-    console.log('got-entered');
     let date = new Date();
     if (socketGame) {
       console.log(socketGame.isRight(data.expr));
