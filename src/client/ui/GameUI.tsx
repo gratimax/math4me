@@ -1,22 +1,38 @@
 import * as React from "react";
 
-import {StartingState} from "../startingState";
+import * as GameRole from "../gameRole";
 
-interface GameUIProps {
-  startingState: StartingState
+interface GameUIState {
+  gameRole: GameRole.GameRole
+  name?: String
 }
 
-export default class GameUI extends React.Component<GameUIProps, {}> {
-  componentMount()
+export default class GameUI extends React.Component<{}, GameUIState> {
+
+  constructor(props: {}) {
+    super(props);
+
+    this.state = {
+      gameRole: GameRole.create(),
+    }
+  }
+
+  componentDidMount() {
+    this.state.name = prompt("Enter a name!");
+    this.setState(this.state);
+  }
+
   render() {
     return (
-      <nav className="navbar navbar-default navbar-inverse navbar-static-top">
-        <div className="container">
-          <div className="navbar-header">
-            <a className="navbar-brand" href="#">Math4Me</a>
+      <div>
+        <nav className="navbar navbar-default navbar-inverse navbar-static-top">
+          <div className="container">
+            <div className="navbar-header">
+              <a className="navbar-brand" href="#">Math4Me</a>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
     );
   }
 }

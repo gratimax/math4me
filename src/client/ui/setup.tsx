@@ -1,11 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {StartingState} from "../startingState";
 import GameUI from "./GameUI";
 
-export default function setupUI(starting: StartingState) {
+export default function setupUI() {
   ReactDOM.render(
-    <GameUI startingState={starting}/>,
+    <GameUI/>,
     document.getElementById("container")
   );
   console.log("ui setup");

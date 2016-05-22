@@ -1,4 +1,7 @@
+import * as User from "./user";
+
 class Game {
+  users: Array<User>;
   constructor(public id: string) {
   }
 }
