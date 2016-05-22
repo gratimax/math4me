@@ -1,3 +1,5 @@
+import * as path from "path";
+
 import * as express from "express";
 import * as socketio from "socket.io";
 
@@ -9,7 +11,7 @@ app.use(express.static('public'));
 app.get('/:id/', function (req, res) {
   let id = req.params.id;
   if (id in game.games) {
-    
+    res.sendFile(path.join(__dirname, '../public/index.html'));
   } else {
     res.redirect('/');
   }

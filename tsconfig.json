@@ -28,6 +28,6 @@
     "files": [
       "./typings/tsd.d.ts",
       "./src/server.ts",
-      "./src/client.tsx"
+      "./src/client.ts"
     ]
 }
