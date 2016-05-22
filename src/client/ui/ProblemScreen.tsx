@@ -133,6 +133,38 @@ export class ProblemScreen extends React.Component<Props, State> {
         displayCrown={false} whoGotIt={problem.whoGotIt}/>
     }
     let ops = ['('].concat(problem.ops).concat([')']);
+    let didISolveIt = problem.whoGotIt.indexOf(this.props.game.user.id) != -1;
+    let calculator = null;
+    if (!didISolveIt) {
+      calculator = <div>
+        <br/>
+        <div className="btn-group">
+          <button className="btn btn-warning" onClick={this.del.bind(this)}>Del</button>
+          <button className="btn btn-error" onClick={this.clear.bind(this)}>Clear</button>
+        </div>
+        <br/>
+        <div className="btn-group">
+          {ops.map((op, index) => {
+            return <Op key={index} op={op} handler={this.pressedOp.bind(this, op)}/>
+          })}
+        </div>
+        <br/>
+        <div className="btn-group">
+          {problem.given.map((num, index) => {
+            let disabled = this.state.numberIdsUsed.indexOf(index) != -1;
+            return <Num key={index} num={num} handler={this.pressedNum.bind(this,index, num)} disabled={disabled}/>
+          })}
+        </div>
+      </div>;
+    }
+    let niceJob = null;
+    if (didISolveIt) {
+      niceJob =
+        <div className="panel-heading">
+          <h3 className="panel-title">Nice job!</h3>
+        </div>;
+    }
+    let panelOtherClass = (didISolveIt) ? " panel-success" : " panel-default";
     return (
       <div className="row">
         <div className="col-md-4">
@@ -149,29 +181,13 @@ export class ProblemScreen extends React.Component<Props, State> {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="panel panel-primary">
+          <div className={"panel"+panelOtherClass}>
+            {niceJob}
             <div className="panel-body">
               <p>
                 <span className="calculator">{this.keptSanitized().join(' ') || "?"} => {this.eval()}</span>
               </p>
-              <br/>
-              <div className="btn-group">
-                <button className="btn btn-warning" onClick={this.del.bind(this)}>Del</button>
-                <button className="btn btn-error" onClick={this.clear.bind(this)}>Clear</button>
-              </div>
-              <br/>
-              <div className="btn-group">
-                {ops.map((op, index) => {
-                  return <Op key={index} op={op} handler={this.pressedOp.bind(this, op)}/>
-                })}
-              </div>
-              <br/>
-              <div className="btn-group">
-                {problem.given.map((num, index) => {
-                  let disabled = this.state.numberIdsUsed.indexOf(index) != -1;
-                  return <Num key={index} num={num} handler={this.pressedNum.bind(this,index, num)} disabled={disabled}/>
-                })}
-              </div>
+              {calculator}
             </div>
           </div>
         </div>

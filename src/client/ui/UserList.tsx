@@ -34,7 +34,7 @@ class UserDisplay extends React.Component<DisplayProps, {}> {
     }
     let userHead = <span>{this.props.user.name} {you}</span>;
     if (this.props.gotIt) {
-      userHead = <em>{userHead}</em>
+      userHead = <em className="text-success">{userHead} (answered)</em>
     }
     return <li className="list-group-item">{userHead} {crown} {score}</li>;
   }

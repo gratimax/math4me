@@ -38,7 +38,7 @@ export class AnswerScreen extends React.Component<Props, {}> {
         <div className="col-md-4">
           <div className="panel panel-success">
             <div className="panel-heading">
-              <h3 className="panel-title">Answer</h3>
+              <h3 className="panel-title">Possible Answer</h3>
             </div>
             <div className="panel-body">
               <span className="calculator">{this.props.answer}</span>

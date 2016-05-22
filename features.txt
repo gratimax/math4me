@@ -2,4 +2,3 @@
 - show progress of users during problem
 - input numbers/ops with keyboard
 - show which ops available
-- backspace in order
