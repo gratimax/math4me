@@ -6,49 +6,55 @@ import {ClientGame, GameRole, GameStage} from "./client/clientGame";
 import User from "./user"
 import * as ui from "./client/ui";
 
-function getConnectUrl() {
-  let href = window.location.href;
-  return href.substr(0, href.length - window.location.pathname.length);
-}
-
-class Main extends React.Component<{}, ClientGame> {
+class Main extends React.Component<{}, {game: ClientGame}> {
 
   constructor(props: {}) {
     super(props);
-    this.state = new ClientGame(null, null, GameRole.create(), new GameStage.PromptingForName());
+    this.state = {
+      game: new ClientGame(null, null, GameRole.create(), new GameStage.PromptingForName())
+    };
   }
-
-  updateState() {
-    this.setState(this.state);
-  }
-
-  handleSocket() {
+  
+  handleSocket(name: String) {
     let socket: SocketIOClient.Socket;
 
     localStorage['debug'] = '*:socket';
-    window['socket'] = socket = SocketIOClient.connect(getConnectUrl());
+    console.log(ClientGame.getConnectUrl());
+    window['socket'] = socket = SocketIOClient.connect(ClientGame.getConnectUrl());
 
-    let name = '';
-    while (!name) {
-      name = prompt("Enter a name!")
-    }
+    let game = this.state.game;
+
+    game.stage = new GameStage.Waiting("setting up sockets...");
+    this.forceUpdate();
 
     socket.on('connect', () => {
-      window['game'] = this.state;
-      if (this.state.role instanceof GameRole.JoiningGame) {
+      window['game'] = game;
+      if (game.role instanceof GameRole.JoiningGame) {
+        let id = (game.role as GameRole.JoiningGame).id;
+        game.id = id;
+        game.stage = new GameStage.Waiting("trying to join game " + id);
+        this.forceUpdate();
         socket.once('didNotJoinGame', (data) => {
-          this.state.stage = new GameStage.JoinGameFailed(data.reason);
-          this.updateState();
+          game.stage = new GameStage.JoinGameFailed(data.reason);
+          this.forceUpdate();
         });
         socket.once('joinedGame', (data) => {
-          this.state.user = new User(data.userId, name);
-          this.updateState();
+          game.user = new User(data.userId, name);
+          this.forceUpdate();
         });
-        socket.emit('joinGame', {id: (this.state.role as GameRole.JoiningGame).id, name: name});
+        socket.emit('joinGame', {id: id, name: name});
       } else {
+        game.stage = new GameStage.Waiting("trying to create game");
+        this.forceUpdate();
+        console.log(game instanceof ClientGame);
         socket.once('createdGame', (data) => {
-          this.state.id = data.id;
-          this.state.user = new User(0, name);
+          game.id = data.id;
+          game.user = new User(0, name);
+          game.stage = new GameStage.StartedLobby();
+          this.forceUpdate();
+          socket.on('allUsers', (data) => {
+
+          });
         });
         socket.emit('createGame', {name: name});
       }
@@ -57,13 +63,12 @@ class Main extends React.Component<{}, ClientGame> {
 
   eventHandler(evt, data) {
     if (evt == 'gotName') {
-      this.handleSocket();
+      this.handleSocket(data);
     }
   }
 
-
   render() {
-    return <ui.GameUI game={this.state} handler={this.eventHandler.bind(this)}/>;
+    return <ui.GameUI game={this.state.game} handler={this.eventHandler.bind(this)}/>;
   }
 
 }

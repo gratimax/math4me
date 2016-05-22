@@ -1,18 +1,17 @@
 import * as React from "react";
 
-export class RejectedGameScreen extends React.Component<{reason: String}, {}> {
+export class WaitingGameScreen extends React.Component<{message: String}, {}> {
   render() {
     return (
       <div className="row">
         <div className="col-md-4 col-md-offset-4">
-          <div className="panel panel-danger">
+          <div className="panel panel-primary">
             <div className="panel-heading">
-              <h3 className="panel-title">Could not join game</h3>
+              <h3 className="panel-title">Please hold tight...</h3>
             </div>
             <div className="panel-body">
-              {this.props.reason}
+              {this.props.message}
               <br/>
-              <a href="/">Try to start your own game</a>
             </div>
           </div>
         </div>

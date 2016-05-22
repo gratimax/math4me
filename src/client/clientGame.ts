@@ -26,20 +26,33 @@ export namespace GameStage {
 
   export interface GameStage {}
 
-  export class PromptingForName implements GameStage {
-    
-  }
+  export class PromptingForName implements GameStage {}
 
   export class JoinGameFailed implements GameStage {
     constructor(public reason: string) {}
   }
 
+  export class Waiting implements GameStage {
+    constructor(public message: string) {}
+  }
+
+  export class StartedLobby implements GameStage {}
+
 }
 
 export class ClientGame {
-  public constructor(
+  constructor(
     public id: number,
     public user: User,
     public role: GameRole.GameRole,
     public stage: GameStage.GameStage) {}
+
+  static getConnectUrl(): String {
+    let href = window.location.href;
+    return href.substr(0, href.length - window.location.pathname.length);
+  }
+
+  getLink(): String {
+    return ClientGame.getConnectUrl() + '/' + this.id;
+  }
 }

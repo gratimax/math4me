@@ -2,9 +2,12 @@ import * as React from "react";
 
 import {ClientGame, GameStage} from "./clientGame";
 import {RejectedGameScreen} from "./ui/RejectedGameScreen";
+import {PromptNameGameScreen} from "./ui/PromptNameGameScreen";
+import {WaitingGameScreen} from "./ui/WaitingGameScreen";
+import {StartedLobbyScreen} from "./ui/StartedLobbyScreen";
 
 interface Props {
-  game: ClientGame,
+  game: ClientGame;
   handler: (string, any) => {}
 }
 
@@ -15,10 +18,19 @@ export class GameUI extends React.Component<Props, {}> {
   }
 
   render() {
-    let sub = null;
-    if (this.props.game.stage instanceof GameStage.JoinGameFailed) {
-      let stage = this.props.game.stage as GameStage.JoinGameFailed;
-      sub = <RejectedGameScreen reason={stage.reason}/>;
+    console.log(this.props.game instanceof ClientGame);
+    let screen = null;
+    let s = this.props.game.stage;
+    if (s instanceof GameStage.JoinGameFailed) {
+      let stage = s as GameStage.JoinGameFailed;
+      screen = <RejectedGameScreen reason={stage.reason}/>;
+    } else if (s instanceof GameStage.PromptingForName) {
+      screen = <PromptNameGameScreen handler={this.props.handler}/>;
+    } else if (s instanceof GameStage.Waiting) {
+      let stage = s as GameStage.Waiting;
+      screen = <WaitingGameScreen message={stage.message}/>;
+    } else if (s instanceof GameStage.StartedLobby) {
+      screen = <StartedLobbyScreen handler={this.props.handler} game={this.props.game}/>
     }
     return (
       <div>
@@ -29,7 +41,9 @@ export class GameUI extends React.Component<Props, {}> {
             </div>
           </div>
         </nav>
-        {sub}
+        <div className="container">
+          {screen}
+        </div>
       </div>
     );
   }
