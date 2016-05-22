@@ -14,6 +14,7 @@ export default class GameUI extends React.Component<{}, GameUIState> {
 
     this.state = {
       gameRole: GameRole.create(),
+      name: "whocares"
     }
   }
 
