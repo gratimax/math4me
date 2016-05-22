@@ -22,9 +22,40 @@ export class Problem {
   }
 
   isRight(expr: string): boolean {
-    return math.eval(expr) == this.goal;
+    var toks = expr.replace("(", "( ").replace(")", ") ").split(" ");
+    var ops = this.ops.slice(0);
+    var given = this.given.slice(0);
+    var match;
+    try
+    {
+      match = math.eval(expr) == this.goal;
+    } catch(e) {
+      return false;
+    }
+    if(match) {
+      for(var i=0; i<toks; i++) {
+        var tok = toks[i];
+        if(tok != "") {
+          var num = parseInt(tok);
+          if(num != NaN) {
+            var index = given.indexOf(num);
+            if(index == -1)
+              return false;
+            else
+              given.splice(index, 1);
+          } else {
+            var index = ops.indexOf(tok);
+            if(index == -1)
+              return false;
+            else
+              ops.splice(index, 1);
+          }
+        }
+      }
+      return true;
+    }
+    return false;
   }
-
 }
 
 export function getProblem(min: number, max:number, n: number, transforms = defaultTransforms): Problem {
