@@ -2,13 +2,8 @@ import * as React from "react";
 import {ClientGame} from "../clientGame";
 import {UserList} from "./UserList";
 
-interface Props {
-  game: ClientGame;
-  handler: (string, any) => {}
-}
-
-export class StartedLobbyScreen extends React.Component<Props, {}> {
-  constructor(props: Props) {
+export class WaitingLobbyScreen extends React.Component<{game:ClientGame}, {}> {
+  constructor(props: {game:ClientGame}) {
     super(props);
   }
 
