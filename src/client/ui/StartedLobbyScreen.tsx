@@ -12,6 +12,10 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
     super(props);
   }
 
+  select(event) {
+    event.target.select();
+  }
+
   render() {
     let liGroup = null;
     if (this.props.game.users) {
@@ -26,7 +30,7 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
             </div>
             <div className="panel-body">
               <p>
-                Link to share: {this.props.game.getLink()}
+                Link to share: <input type="text" onClick={this.select} defaultValue={this.props.game.getLink()} />
               </p>
               <button className="btn btn-primary">Start Game</button>
             </div>
