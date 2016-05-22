@@ -62,7 +62,7 @@ interface Transform {
 	transform(toks: Token[]): Token;
 }
 
-export function gen(nums: number[], transforms: Transform[]) {
+export function gen(nums: number[], transforms: Transform[]): Token[] {
 	var toks: Token[] = nums.map((n: number) => new NToken(n));
 	var i = 0;
 	while(toks.length != 1) {

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "run": "tsc && browserify dist/client.js -o public/bundle.js && node dist/server.js -w src/",
+    "tsc": "tsc",
     "setup": "npm install && tsd install"
   },
   "devDependencies": {

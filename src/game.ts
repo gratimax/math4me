@@ -1,17 +1,25 @@
 import User from "./user";
 
-class Game {
+let gameId = 0;
+
+export class Game {
   users: Array<User>;
-  constructor(public id: string) {
+  id: number;
+  constructor() {
+    this.id = gameId;
+    gameId++;
   }
+
+  addUser(name: String): User {
+    let newUser = new User(this.users.length, name);
+    this.users.push(newUser);
+    return newUser;
+  }
+  
 }
 
-let games: {[id: string]: Game} = {};
+export let games: {[id: number]: Game} = {};
 
-function addGame(game: Game) {
+export function addGame(game: Game) {
   games[game.id] = game;
 }
-
-addGame(new Game("hello"));
-
-export {Game, games};

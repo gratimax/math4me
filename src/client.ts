@@ -11,7 +11,7 @@ math.config({
 
 import * as logic from "./logic";
 (window as any).logic = logic;
-function getExprFrac(min: number, max:number, n: number, transforms) {
+function getExprFrac(min: number, max:number, n: number, transforms): [string, any] {
   var nums = [];
   while(true)
   {

@@ -9,7 +9,7 @@ let app = express();
 app.use(express.static('public'));
 
 app.get('/:id/', function (req, res) {
-  let id = req.params.id;
+  let id = parseInt(req.params.id);
   if (id in game.games) {
     res.sendFile(path.join(__dirname, '../public/index.html'));
   } else {
@@ -24,8 +24,9 @@ let serve = app.listen(3000, () => {
 let io = socketio(serve);
 
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
+  socket.on('createGame', function () {
+    var newGame = new game.Game();
+    game.addGame(newGame);
+    socket.emit('createdGame', {id: newGame.id});
   });
 });
