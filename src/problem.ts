@@ -54,8 +54,7 @@ export class Problem {
   }
 
   eval(expr: string): string {
-    let evaled = math.eval(expr);
-    let frac = this.goal;
+    let frac = math.eval(expr);
     var s = frac.s == 1 ? "" : "-";
     if (frac.d == 1)
       return s+frac.n.toString();

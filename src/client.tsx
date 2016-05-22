@@ -148,6 +148,9 @@ class Main extends React.Component<{}, {game: ClientGame}> {
   onUserScore(data: {userId: number, score: number}) {
     this.setUserScore(data.userId, data.score);
     let game = this.state.game;
+    game.users.sort((a, b) => {
+      return b.score - a.score;
+    })
     let problem = (game.stage as GameStage.DoingProblem).problem;
     problem.whoGotIt.push(data.userId);
     this.forceUpdate();
@@ -170,7 +173,6 @@ class Main extends React.Component<{}, {game: ClientGame}> {
     let stage = game.stage as GameStage.StartedLobby;
     game.totalProblems = settings.numProblems;
     game.timeGiven = settings.secondsEachProblem;
-    console.log(game.timeGiven);
     stage.settings = settings;
     this.forceUpdate();
     game.socket.emit('changeSettings', {settings: settings});
