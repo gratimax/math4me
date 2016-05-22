@@ -1,20 +1,37 @@
 import * as React from "react";
 import {ClientGame} from "../clientGame";
 import {UserList} from "./UserList";
+import {ClientProblem} from "../clientProblem";
 
 interface Props {
   game: ClientGame;
+  problem: ClientProblem;
   handler: (string, any) => {}
-  mainUser: boolean
 }
 
-export class StartedLobbyScreen extends React.Component<Props, {}> {
-  constructor(props: Props) {
+class Op extends React.Component<{handler: (string, any) => {}, op: string}, {}> {
+  constructor(props: {handler: (string, any) => {}, op: string}) {
     super(props);
   }
 
-  select(event) {
-    event.target.select();
+  render() {
+    return <button className="btn btn-success">{this.props.op}</button>;
+  }
+}
+
+class Num extends React.Component<{handler: (string, any) => {}, num: number}, {}> {
+  constructor(props: {handler: (string, any) => {}, num: number}) {
+    super(props);
+  }
+
+  render() {
+    return <button className="btn btn-primary">{this.props.num}</button>;
+  }
+}
+
+export class ProblemScreen extends React.Component<Props, {}> {
+  constructor(props: Props) {
+    super(props);
   }
 
   startGame() {
@@ -26,32 +43,35 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
     if (this.props.game.users) {
       liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user}/>
     }
-    let startGame = null;
-    if (this.props.mainUser) {
-      startGame = <button className="btn btn-primary" onClick={this.startGame.bind(this)}>Start Game</button>;
-    }
+    let problem = this.props.problem;
+    let ops = ['('].concat(problem.ops).concat([')']);
     return (
       <div className="row">
         <div className="col-md-4">
           <div className="panel panel-default">
             <div className="panel-heading">
-              <h3 className="panel-title">Game Controls</h3>
+              <h3 className="panel-title">Problem</h3>
             </div>
             <div className="panel-body">
               <p>
-                Link to share: <input type="text" onClick={this.select} defaultValue={this.props.game.getLink()} />
+                Goal: {problem.goal}
               </p>
-              {startGame}
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="panel panel-primary">
-            <div className="panel-heading">
-              <h3 className="panel-title">Game Lobby</h3>
-            </div>
             <div className="panel-body">
-              Waiting for game to start...
+              <div className="btn-group">
+                {ops.map((op) => {
+                  return <Op op={op} handler={this.props.handler}/>
+                })}
+              </div>
+              <div className="btn-group">
+                {problem.given.map((num) => {
+                  return <Num num={num} handler={this.props.handler}/>
+                })}
+              </div>
             </div>
           </div>
         </div>

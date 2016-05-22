@@ -54,10 +54,10 @@ io.on('connection', function (socket) {
 
   socket.on('startGame', function () {
     function newProblem() {
-      console.log('tick game' + socketGame.id);
+      console.log('tick game' + socketGame.id + ', #' + socketGame.round);
       if (socketGame.canMakeProblem()) {
         let prob = socketGame.makeProblem();
-        io.to(socketGame.getRoom()).emit('newProblem', {given: prob.given, goal: prob.getGoalString()});
+        io.to(socketGame.getRoom()).emit('newProblem', {given: prob.given, goal: prob.getGoalString(), ops: prob.ops});
         setTimeout(sendAnswer, 15 * 1000);
       } else {
         socketGame.finish();
@@ -70,7 +70,8 @@ io.on('connection', function (socket) {
     }
     if (socketGame) {
       io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
-      newProblem();
+      io.to(socketGame.getRoom()).emit('gameStarting');
+      setTimeout(newProblem, 2 * 1000);
     }
   });
 

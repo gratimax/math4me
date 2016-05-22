@@ -1,4 +1,6 @@
+import * as SocketIOClient from "socket.io-client";
 import User from "../user";
+import {ClientProblem} from "./clientProblem";
 
 export namespace GameRole {
 
@@ -38,6 +40,12 @@ export namespace GameStage {
 
   export class StartedLobby implements GameStage {}
 
+  export class WaitingLobby implements GameStage {}
+
+  export class DoingProblem implements GameStage {
+    constructor(public problem: ClientProblem) {}
+  }
+
 }
 
 export class ClientGame {
@@ -46,7 +54,8 @@ export class ClientGame {
     public user: User,
     public role: GameRole.GameRole,
     public stage: GameStage.GameStage,
-    public users: Array<User>) {}
+    public users: Array<User>,
+    public socket: SocketIOClient.Socket) {}
 
   static getConnectUrl(): String {
     let href = window.location.href;

@@ -3,6 +3,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import {ClientGame, GameRole, GameStage} from "./client/clientGame";
+import {ClientProblem} from "./client/clientProblem";
 import User from "./user"
 import * as ui from "./client/ui";
 
@@ -16,19 +17,30 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         null,
         GameRole.create(),
         new GameStage.PromptingForName(),
+        null,
         null
       )
     };
   }
   
   handleSocket(name: String) {
-    let socket: SocketIOClient.Socket;
+    let game = this.state.game;
 
     localStorage['debug'] = '*:socket';
     console.log(ClientGame.getConnectUrl());
-    window['socket'] = socket = SocketIOClient.connect(ClientGame.getConnectUrl());
+    let socket = window['socket'] = game.socket = SocketIOClient.connect(ClientGame.getConnectUrl());
 
-    let game = this.state.game;
+    function onUsers(data: any) {
+      game.users = data.users.map(
+        (obj: {id: number, name: String}) => {
+          if (obj.id == game.user.id) {
+            return game.user;
+          } else {
+            return new User(obj.id, obj.name);
+          }
+        }
+      );
+    }
 
     game.stage = new GameStage.Waiting("setting up sockets...");
     this.forceUpdate();
@@ -46,6 +58,12 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         });
         socket.once('joinedGame', (data) => {
           game.user = new User(data.userId, name);
+          game.stage = new GameStage.WaitingLobby();
+          socket.on('allUsers', (data) => {
+            onUsers(data);
+            this.forceUpdate();
+          });
+          socket.on('gameStarting', this.onGameStart.bind(this));
           this.forceUpdate();
         });
         socket.emit('joinGame', {id: id, name: name});
@@ -58,15 +76,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
           game.stage = new GameStage.StartedLobby();
           this.forceUpdate();
           socket.on('allUsers', (data) => {
-            game.users = data.users.map(
-              (obj: {id: number, name: String}) => {
-                if (obj.id == game.user.id) {
-                  return game.user;
-                } else {
-                  return new User(obj.id, obj.name);
-                }
-              }
-            );
+            onUsers(data);
             this.forceUpdate();
           });
         });
@@ -75,9 +85,29 @@ class Main extends React.Component<{}, {game: ClientGame}> {
     });
   }
 
+  onGameStart() {
+    let game = this.state.game;
+    game.stage = new GameStage.Waiting("Game is about to start!");
+    this.forceUpdate();
+    game.socket.on('newProblem', (data) => {
+      let problem = new ClientProblem(data.given, data.goal, data.ops);
+      game.stage = new GameStage.DoingProblem(problem);
+      this.forceUpdate();
+    });
+  }
+
+  startGame() {
+    let game = this.state.game;
+    let socket = game.socket;
+    socket.on('gameStarting', this.onGameStart.bind(this))
+    socket.emit('startGame');
+  }
+
   eventHandler(evt, data) {
     if (evt == 'gotName') {
       this.handleSocket(data);
+    } else if (evt == 'startGame') {
+      this.startGame();
     }
   }
 
