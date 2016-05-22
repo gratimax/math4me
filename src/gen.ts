@@ -12,10 +12,10 @@ export function getExprFrac(min: number, max:number, n: number, transforms = def
     for(var i=0; i<n; i++)
       nums[i] = logic.getRandomInt(min, max);
     var expr = logic.gen(nums, transforms).toString();
-    var frac = math.eval(expr);
-    if(frac.d != 0) {
+    try {
+      var frac = math.eval(expr);
       return [expr, frac];
-    }
+    } catch(e) { }
   }
 }
 
