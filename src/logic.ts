@@ -18,7 +18,7 @@ var precs = {
 	"/":1
 }
 
-class Token {
+export class Token {
 	toString(): string {
 		return ""
 	}
@@ -26,7 +26,7 @@ class Token {
 		return Number.MAX_VALUE;
 	}
 }
-class NToken extends Token {
+export class NToken extends Token {
 	constructor(public n: number) {
 		super();
 	}
@@ -34,7 +34,7 @@ class NToken extends Token {
 		return this.n.toString();
 	}
 }
-class OpToken extends Token {
+export class OpToken extends Token {
 	constructor(public op: string, public t1: Token, public t2: Token) {
 		super();
 	}
@@ -54,14 +54,27 @@ class OpToken extends Token {
 	}
 }
 
-interface Transform {
+export class Transform {
 	num: number;
-	transform(toks: Token[]): Token;
+	transform(toks: Token[]): Token {
+		return null;
+	}
 }
 
-export function gen(nums: number[], transforms: Transform[]): Token {
+export class OpTransform extends Transform {
+	constructor(public op: string) {
+		super();
+		this.num = 2;
+	}
+	transform(toks: Token[]): Token {
+		return new OpToken(this.op, toks[0], toks[1]);
+	}
+}
+
+export function gen(nums: number[], transforms: Transform[]): [Token, Transform[]] {
 	var toks: Token[] = nums.map((n: number) => new NToken(n));
 	var i = 0;
+	var done: Transform[] = [];
 	while(toks.length != 1) {
 		var index = getRandomInt(0, transforms.length-1);
 		var transform = transforms[index];
@@ -71,19 +84,11 @@ export function gen(nums: number[], transforms: Transform[]): Token {
 			var pos = getRandomInt(0, max);
 			toks[pos] = transform.transform(toks.slice(pos, pos+transform.num));
 			toks.splice(pos+1, transform.num-1);
+			done.push(transform);
 			i++;
 		} else {
 			transforms.splice(index, 1);
 		}
 	}
-	return toks[0];
-}
-
-export function opTransform(op: string): Transform {
-	return {
-		num: 2,
-		transform: (toks: Token[]) => {
-			return new OpToken(op, toks[0], toks[1]);
-		}
-	}
+	return [toks[0], done];
 }
