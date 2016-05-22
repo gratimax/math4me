@@ -67,7 +67,7 @@ export class Game {
 
   getScore(date: Date): number {
     let stageDate = (this.stage as GameStage.Playing).date;
-    return constants.NUM_SECONDS_GIVEN - (date.getTime() - stageDate.getTime())/1000;
+    return constants.NUM_SECONDS_GIVEN * 2 - (date.getTime() - stageDate.getTime())/1000;
   }
 
   incrementScore(userId: number, score: number) {
