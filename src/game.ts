@@ -1,6 +1,7 @@
 import User from "./user";
 import * as problem from "./problem";
 import * as constants from "./constants";
+import {GameSettings} from "./settings";
 
 let gameId = 0;
 
@@ -8,7 +9,9 @@ export namespace GameStage {
 
   export interface Stage {}
 
-  export class WaitingForUsers implements Stage {}
+  export class WaitingForUsers implements Stage {
+    constructor(public settings: GameSettings) {}
+  }
   export class Playing implements Stage {
     constructor(public problem: problem.Problem, public date: Date) {}
   }
@@ -20,7 +23,7 @@ export class Game {
 
   public users: Array<User> = [];
   public id: number;
-  public stage: GameStage.Stage = new GameStage.WaitingForUsers();
+  public stage: GameStage.Stage = new GameStage.WaitingForUsers(new GameSettings());
   public score: {[id: number]: number} = {};
   public round: number = 0;
 
@@ -28,7 +31,7 @@ export class Game {
     this.users = [];
     this.id = gameId;
     gameId++;
-    this.stage = new GameStage.WaitingForUsers();
+    this.stage = new GameStage.WaitingForUsers(new GameSettings());
   }
 
   addUser(name: string): User {
@@ -41,13 +44,13 @@ export class Game {
     return `game-${this.id}`
   }
 
-  canMakeProblem(): boolean {
-    return this.round < constants.NUMBER_PROBLEMS;
+  canMakeProblem(max: number): boolean {
+    return this.round < max;
   }
 
-  makeProblem(): problem.Problem {
+  makeProblem(num_nums: number): problem.Problem {
     this.round++;
-    let prob = problem.getProblem(constants.MIN_NUM, constants.MAX_NUM, constants.NUM_OPS);
+    let prob = problem.getProblem(constants.MIN_NUM, constants.MAX_NUM, num_nums);
     prob.problemNumber = this.round;
     this.stage = new GameStage.Playing(prob, new Date());
     return prob;

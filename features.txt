@@ -1,2 +1,0 @@
-- configure game difficulty
-- show which ops available

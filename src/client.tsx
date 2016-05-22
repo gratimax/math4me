@@ -6,6 +6,7 @@ import {ClientGame, GameRole, GameStage} from "./client/clientGame";
 import {ClientProblem} from "./client/clientProblem";
 import User from "./user"
 import * as ui from "./client/ui";
+import {GameSettings} from "./settings";
 
 class Main extends React.Component<{}, {game: ClientGame}> {
 
@@ -59,7 +60,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         socket.once('joinedGame', (data) => {
           game.user = new User(data.userId, name, 0);
           game.totalProblems = data.numProblems;
-          game.stage = new GameStage.WaitingLobby();
+          game.stage = new GameStage.WaitingLobby(GameSettings.fromObject(data.settings));
           socket.on('allUsers', (data) => {
             onUsers(data);
             this.forceUpdate();
@@ -67,6 +68,11 @@ class Main extends React.Component<{}, {game: ClientGame}> {
           socket.on('gameStarting', this.onGameStart.bind(this));
           this.forceUpdate();
         });
+        socket.on('settingsChanged', (data) => {
+          let stage = game.stage as GameStage.WaitingLobby;
+          stage.settings = GameSettings.fromObject(data.settings);
+          this.forceUpdate();
+        })
         socket.emit('joinGame', {id: id, name: name});
       } else {
         game.stage = new GameStage.Waiting("trying to create game");
@@ -75,7 +81,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
           game.id = data.id;
           game.totalProblems = data.numProblems;
           game.user = new User(0, name, 0);
-          game.stage = new GameStage.StartedLobby();
+          game.stage = new GameStage.StartedLobby(new GameSettings());
           this.forceUpdate();
           socket.on('allUsers', (data) => {
             onUsers(data);

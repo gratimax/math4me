@@ -5,6 +5,7 @@ import * as socketio from "socket.io";
 
 import * as game from "./game";
 import * as constants from "./constants";
+import {GameSettings} from "./settings";
 
 let app = express();
 app.use(express.static('public'));
@@ -32,6 +33,15 @@ io.on('connection', function (socket) {
     io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
   });
 
+  socket.on('changeSettings', function (data) {
+    let stage = socketGame.stage;
+    if (stage instanceof game.GameStage.WaitingForUsers) {
+      let settings = GameSettings.fromObject(data.settings);
+      (stage as game.GameStage.WaitingForUsers).settings = settings;
+      socket.emit('settingsChanged', {settings: settings});
+    }
+  });
+
   socket.on('joinGame', function (data) {
     // expects id, name
     let id: number = data.id;
@@ -43,22 +53,25 @@ io.on('connection', function (socket) {
         socket.emit('didNotJoinGame', {reason: 'game is closed'});
       } else {
         socketGame = joinGame;
+        let settings = (socketGame.stage as game.GameStage.WaitingForUsers).settings;
         socket.join(joinGame.getRoom());
         let user = joinGame.addUser(data.name);
-        socket.emit('joinedGame', {userId: user.id, name: data.name, numProblems: constants.NUMBER_PROBLEMS});
+        socket.emit('joinedGame', {userId: user.id, name: data.name, numProblems: constants.NUMBER_PROBLEMS,
+          settings: settings});
         io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
       }
     }
   });
 
   socket.on('startGame', function () {
+    let settings = (socketGame.stage as game.GameStage.WaitingForUsers).settings;
     function newProblem() {
       console.log('tick game' + socketGame.id + ', #' + socketGame.round);
-      if (socketGame.canMakeProblem()) {
-        let prob = socketGame.makeProblem();
+      if (socketGame.canMakeProblem(settings.numProblems)) {
+        let prob = socketGame.makeProblem(settings.numGivenNumbers);
         io.to(socketGame.getRoom()).emit('newProblem', {
           given: prob.given, goal: prob.getGoalString(), ops: prob.ops, problemNumber: prob.problemNumber});
-        setTimeout(sendAnswer, constants.NUM_SECONDS_GIVEN * 1000);
+        setTimeout(sendAnswer, settings.secondsEachProblem * 1000);
       } else {
         socketGame.finish();
         let scores = socketGame.users.map((user) => {

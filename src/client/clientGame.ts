@@ -1,6 +1,7 @@
 import * as SocketIOClient from "socket.io-client";
 import User from "../user";
 import {ClientProblem} from "./clientProblem";
+import {GameSettings} from "../settings";
 
 export namespace GameRole {
 
@@ -38,9 +39,13 @@ export namespace GameStage {
     constructor(public message: string) {}
   }
 
-  export class StartedLobby implements GameStage {}
+  export class StartedLobby implements GameStage {
+    constructor(public settings: GameSettings) {}
+  }
 
-  export class WaitingLobby implements GameStage {}
+  export class WaitingLobby implements GameStage {
+    constructor(public settings: GameSettings) {}
+  }
 
   export class DoingProblem implements GameStage {
     constructor(public problem: ClientProblem) {}
@@ -51,7 +56,7 @@ export namespace GameStage {
   }
 
   export class FinishedGame implements GameStage {
-    
+
   }
 
 }

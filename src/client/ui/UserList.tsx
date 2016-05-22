@@ -40,7 +40,7 @@ class UserDisplay extends React.Component<DisplayProps, {}> {
       userHead = <em className="text-success">{userHead} (answered)</em>
     }
     let curValue = null;
-    if (this.props.currentValue) {
+    if (this.props.currentValue && !this.props.gotIt) {
       curValue = <span className="pull-right text-info">[at {this.props.currentValue}]&nbsp;&nbsp;</span>;
     }
     return <li className="list-group-item">{userHead} {crown} {score} {curValue} </li>;

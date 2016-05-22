@@ -1,11 +1,13 @@
 import * as React from "react";
 import {ClientGame} from "../clientGame";
 import {UserList} from "./UserList";
+import {GameSettings} from "../../settings";
 
 interface Props {
   game: ClientGame;
   handler: (string, any) => {}
   mainUser: boolean
+  settings: GameSettings;
 }
 
 export class StartedLobbyScreen extends React.Component<Props, {}> {
@@ -31,6 +33,12 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
     if (this.props.mainUser) {
       startGame = <button className="btn btn-primary" onClick={this.startGame.bind(this)}>Start Game</button>;
     }
+    let settingsPanel;
+    if (this.props.mainUser) {
+      settingsPanel = [];
+    } else {
+      settingsPanel = [];
+    }
     return (
       <div className="row">
         <div className="col-md-4">
@@ -42,6 +50,7 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
               <p>
                 Link to share: <input type="text" onClick={this.select} defaultValue={this.props.game.getLink()} />
               </p>
+              {settingsPanel}
               {startGame}
             </div>
           </div>

@@ -8,10 +8,11 @@ import {StartedLobbyScreen} from "./ui/StartedLobbyScreen";
 import {ProblemScreen} from "./ui/ProblemScreen";
 import {AnswerScreen} from "./ui/AnswerScreen";
 import {GameFinishScreen} from "./ui/GameFinishScreen";
+import {GameSettings} from "../settings";
 
 interface Props {
   game: ClientGame;
-  handler: (string, any) => {}
+  handler: (string, any) => {};
 }
 
 export class GameUI extends React.Component<Props, {}> {
@@ -32,9 +33,13 @@ export class GameUI extends React.Component<Props, {}> {
       let stage = s as GameStage.Waiting;
       screen = <WaitingGameScreen message={stage.message}/>;
     } else if (s instanceof GameStage.StartedLobby) {
-      screen = <StartedLobbyScreen handler={this.props.handler} game={this.props.game} mainUser={true}/>;
+      let stage = s as GameStage.StartedLobby;
+      screen = <StartedLobbyScreen handler={this.props.handler} game={this.props.game} mainUser={true}
+        settings={stage.settings}/>;
     } else if (s instanceof GameStage.WaitingLobby) {
-      screen = <StartedLobbyScreen handler={this.props.handler} game={this.props.game} mainUser={false}/>;
+      let stage = s as GameStage.WaitingLobby;
+      screen = <StartedLobbyScreen handler={this.props.handler} game={this.props.game} mainUser={false}
+        settings={stage.settings}/>;
     } else if (s instanceof GameStage.DoingProblem) {
       let stage = s as GameStage.DoingProblem;
       screen = <ProblemScreen handler={this.props.handler} game={this.props.game} problem={stage.problem}/>;
@@ -49,7 +54,7 @@ export class GameUI extends React.Component<Props, {}> {
         <nav className="navbar navbar-default navbar-inverse navbar-static-top">
           <div className="container">
             <div className="navbar-header">
-              <a className="navbar-brand" href="#">Math4Me</a>
+              <a className="navbar-brand" href="">Math4Me</a>
             </div>
           </div>
         </nav>

@@ -17,4 +17,4 @@ export const MIN_NUM = 0;
 export const MAX_NUM = 9;
 
 // default 5
-export const NUM_OPS = 2;
+export const NUM_NUMS = 2;
