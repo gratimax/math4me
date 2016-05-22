@@ -19,7 +19,7 @@ interface Props {
 }
 
 interface State {
-  kept: Array<{id: number, value: number}|string>,
+  expr: Array<{id: number, value: number}|string>,
   numberIdsUsed: Array<number>,
   prevExpr: string,
   prevEval: any
@@ -64,12 +64,12 @@ export class ProblemScreen extends React.Component<Props, State> {
   }
 
   pressedOp(name: string) {
-    this.state.kept.push(name);
+    this.state.expr.push(name);
     this.forceUpdate();
   }
 
   pressedNum(id: number, num: number) {
-    this.state.kept.push({id: id, value: num});
+    this.state.expr.push({id: id, value: num});
     this.state.numberIdsUsed.push(id);
     this.forceUpdate();
   }
@@ -89,7 +89,7 @@ export class ProblemScreen extends React.Component<Props, State> {
   }
 
   del() {
-    let thing = this.state.kept.pop();
+    let thing = this.state.expr.pop();
     if (typeof thing != "string") {
       let thingId = (thing as any).id;
       this.state.numberIdsUsed = this.state.numberIdsUsed.filter((id) => {
@@ -100,13 +100,13 @@ export class ProblemScreen extends React.Component<Props, State> {
   }
 
   clear() {
-    this.state.kept = [];
+    this.state.expr = [];
     this.state.numberIdsUsed = [];
     this.forceUpdate();
   }
 
-  keptSanitized() {
-    return this.state.kept.map((thing) => {
+  exprSanitized() {
+    return this.state.expr.map((thing) => {
       if (typeof thing == "string") {
         return thing;
       } else {
@@ -116,9 +116,9 @@ export class ProblemScreen extends React.Component<Props, State> {
   }
 
   eval() {
-    if (this.state.kept.length > 0) {
+    if (this.state.expr.length > 0) {
       try {
-        let expr = this.keptSanitized().join(' ');
+        let expr = this.exprSanitized().join(' ');
         if (expr != this.state.prevExpr) {
           this.props.handler('haveExpr', expr);
           this.state.prevExpr = expr;
@@ -195,7 +195,7 @@ export class ProblemScreen extends React.Component<Props, State> {
             {niceJob}
             <div className="panel-body">
               <p>
-                <span className="calculator">{this.keptSanitized().join(' ') || "?"} => {this.eval()}</span>
+                <span className="calculator">{this.exprSanitized().join(' ') || "?"} => {this.eval()}</span>
               </p>
               {calculator}
             </div>
