@@ -23,7 +23,6 @@ export class Problem {
 
   isRight(expr: string): boolean {
     var toks = expr.replace("(", "( ").replace(")", ") ").split(" ");
-    var ops = this.ops.slice(0);
     var given = this.given.slice(0);
     var match;
     try {
@@ -42,12 +41,8 @@ export class Problem {
               return false;
             else
               given.splice(index, 1);
-          } else {
-            var index = ops.indexOf(tok);
-            if(index == -1)
-              return false;
-            else
-              ops.splice(index, 1);
+          } else if(this.ops.indexOf(tok) == -1) {
+            return false;
           }
         }
       }
@@ -65,7 +60,7 @@ export function getProblem(min: number, max:number, n: number, transforms = defa
     }
     var tup = logic.gen(nums, transforms);
     var expr = tup[0].toString();
-    var ops = tup[1].map((t: logic.OpTransform) => t.op);
+    var ops = transforms.map((t: logic.OpTransform) => t.op);
     try {
       var goal = math.eval(expr);
       return new Problem(goal, nums, expr, ops);
