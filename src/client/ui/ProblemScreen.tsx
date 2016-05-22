@@ -155,7 +155,7 @@ export class ProblemScreen extends React.Component<Props, State> {
     let didISolveIt = problem.whoGotIt.indexOf(this.props.game.user.id) != -1;
     let calculator = null;
     if (!didISolveIt) {
-      calculator = <div>
+      calculator = <div className="buttons">
         <br/>
         <div className="btn-group btn-group-lg">
           <button className="btn btn-warning" onClick={this.del.bind(this)}>Del</button>
