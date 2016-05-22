@@ -9,12 +9,7 @@ let app = express();
 app.use(express.static('public'));
 
 app.get('/:id/', function (req, res) {
-  let id = parseInt(req.params.id);
-  if (game.hasId(id)) {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-  } else {
-    res.redirect('/');
-  }
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 let serve = app.listen(3000, () => {
