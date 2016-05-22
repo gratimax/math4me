@@ -1,3 +1,8 @@
+var math = require("mathjs");
+math.config({
+  number: 'Fraction'
+});
+
 export function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
