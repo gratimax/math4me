@@ -4,7 +4,7 @@ import * as GameRole from "../gameRole";
 
 interface GameUIState {
   gameRole: GameRole.GameRole
-  name?: String
+  name: String
 }
 
 export default class GameUI extends React.Component<{}, GameUIState> {
@@ -15,10 +15,6 @@ export default class GameUI extends React.Component<{}, GameUIState> {
     this.state = {
       gameRole: GameRole.create(),
     }
-  }
-
-  componentDidMount() {
-    this.setState(this.state);
   }
 
   render() {

@@ -13,7 +13,7 @@ function getConnectUrl() {
   return href.substr(0, href.length - window.location.pathname.length);
 }
 
-export let socket: SocketIOClient.Socket;
+let socket: SocketIOClient.Socket;
 
 localStorage['debug'] = '*:socket';
 window['socket'] = socket = SocketIOClient.connect(getConnectUrl());
