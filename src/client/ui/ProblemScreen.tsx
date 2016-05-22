@@ -104,6 +104,9 @@ export class ProblemScreen extends React.Component<Props, State> {
       this.state.numberIdsUsed = this.state.numberIdsUsed.filter((id) => {
         return id != thingId;
       });
+    } else {
+      if (thing == "(") this.state.parens--;
+      if (thing == ")") this.state.parens++;
     }
     this.forceUpdate();
   }
@@ -111,6 +114,7 @@ export class ProblemScreen extends React.Component<Props, State> {
   clear() {
     this.state.expr = [];
     this.state.numberIdsUsed = [];
+    this.state.parens = 0;
     this.forceUpdate();
   }
 
