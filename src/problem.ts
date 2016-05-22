@@ -1,4 +1,4 @@
-var math = require('math');
+var math = require('mathjs');
 
 import * as logic from "./logic";
 
