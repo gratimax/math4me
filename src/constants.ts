@@ -1,5 +1,5 @@
 // default 30
-export const NUM_SECONDS_GIVEN = 5;
+export const NUM_SECONDS_GIVEN = 15;
 
 // default 5
 export const NUM_SECONDS_ANSWER = 5;

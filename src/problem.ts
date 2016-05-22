@@ -53,6 +53,16 @@ export class Problem {
     return false;
   }
 
+  eval(expr: string): string {
+    let evaled = math.eval(expr);
+    let frac = evaled;
+    var s = frac.s == 1 ? "" : "-";
+    if (frac.d == 1)
+      return s+frac.n.toString();
+    else
+      return s+frac.n.toString()+"/"+frac.d.toString();
+  }
+
   setSolved(userId: number) {
     if (this.usersCorrect.indexOf(userId) == -1) {
       this.usersCorrect.push(userId);

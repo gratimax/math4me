@@ -89,6 +89,10 @@ io.on('connection', function (socket) {
         let newScore = socketGame.incrementScore(data.userId, score);
         io.to(socketGame.getRoom()).emit('userScore', {userId: data.userId, score: newScore});
       }
+      try {
+        let result = problem.eval(data.expr);
+        io.to(socketGame.getRoom()).emit('userGotValue', {userId: data.userId, value: result});
+      } catch (e) {}
     }
   });
 

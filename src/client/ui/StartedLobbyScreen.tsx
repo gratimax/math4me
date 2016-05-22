@@ -25,7 +25,7 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
     let liGroup = null;
     if (this.props.game.users) {
       liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={false}
-        displayCrown={false} whoGotIt={[]}/>
+        displayCrown={false} whoGotIt={[]} currentValues={{}}/>
     }
     let startGame = null;
     if (this.props.mainUser) {

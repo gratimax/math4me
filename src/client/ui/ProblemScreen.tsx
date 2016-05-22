@@ -20,7 +20,9 @@ interface Props {
 
 interface State {
   kept: Array<{id: number, value: number}|string>,
-  numberIdsUsed: Array<number>
+  numberIdsUsed: Array<number>,
+  prevExpr: string,
+  prevEval: any
 }
 
 class Op extends React.Component<{handler: any, op: string}, {}> {
@@ -54,6 +56,8 @@ export class ProblemScreen extends React.Component<Props, State> {
   initialState(): State {
     let obj = {
       kept: [],
+      prevExpr: '',
+      prevEval: null,
       numberIdsUsed: []
     };
     return obj;
@@ -115,8 +119,14 @@ export class ProblemScreen extends React.Component<Props, State> {
     if (this.state.kept.length > 0) {
       try {
         let expr = this.keptSanitized().join(' ');
-        this.props.handler('haveExpr', expr);
-        return ProblemScreen.getFracString(math.eval(expr));
+        if (expr != this.state.prevExpr) {
+          this.props.handler('haveExpr', expr);
+          this.state.prevExpr = expr;
+          this.state.prevEval = math.eval(expr);
+          return ProblemScreen.getFracString(this.state.prevEval);
+        } else {
+          return ProblemScreen.getFracString(this.state.prevEval);
+        }
       } catch (e) {
         return "?";
       }
@@ -130,7 +140,7 @@ export class ProblemScreen extends React.Component<Props, State> {
     let liGroup = null;
     if (this.props.game.users) {
       liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}
-        displayCrown={false} whoGotIt={problem.whoGotIt}/>
+        displayCrown={false} whoGotIt={problem.whoGotIt} currentValues={problem.currentValues}/>
     }
     let ops = ['('].concat(problem.ops).concat([')']);
     let didISolveIt = problem.whoGotIt.indexOf(this.props.game.user.id) != -1;

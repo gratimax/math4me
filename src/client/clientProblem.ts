@@ -4,5 +4,6 @@ export class ClientProblem {
     public goal: string,
     public ops: Array<string>,
     public problemNumber: number,
-    public whoGotIt: Array<number> = []) {}
+    public whoGotIt: Array<number> = [],
+    public currentValues: {[id: number]: string} = {}) {}
 }

@@ -115,7 +115,12 @@ class Main extends React.Component<{}, {game: ClientGame}> {
       })
       game.stage = new GameStage.FinishedGame();
       this.forceUpdate();
-    })
+    });
+    socket.on('userGotValue', (data) => {
+      let problem = (game.stage as GameStage.DoingProblem).problem;
+      problem.currentValues[data.userId] = data.value;
+      this.forceUpdate();
+    });
   }
 
   setUserScore(userId: number, score: number) {

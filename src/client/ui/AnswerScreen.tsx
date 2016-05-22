@@ -19,8 +19,10 @@ export class AnswerScreen extends React.Component<Props, {}> {
     let liGroup = null;
     if (this.props.game.users) {
       liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}
-        displayCrown={false} whoGotIt={problem.whoGotIt}/>
+        displayCrown={false} whoGotIt={problem.whoGotIt} currentValues={problem.currentValues}/>
     }
+    let didISolveIt = problem.whoGotIt.indexOf(this.props.game.user.id) != -1;
+    let panelOtherClass = (didISolveIt) ? " panel-success" : " panel-info";
     return (
       <div className="row">
         <div className="col-md-4">
@@ -36,7 +38,7 @@ export class AnswerScreen extends React.Component<Props, {}> {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="panel panel-success">
+          <div className={"panel"+panelOtherClass}>
             <div className="panel-heading">
               <h3 className="panel-title">Possible Answer</h3>
             </div>
