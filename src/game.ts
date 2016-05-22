@@ -75,7 +75,16 @@ export class Game {
       this.score[userId] = score;
     }
   }
-  
+
+  getUsers(): Array<{id: number, name: String}> {
+    return this.users.map((user) => {
+      return {id: user.id, name: user.name}
+    });
+  }
+
+  getProblemAnswer(): String {
+    return (this.stage as GameStage.Playing).problem.expr;
+  }
 }
 
 let games: {[id: number]: Game} = {};

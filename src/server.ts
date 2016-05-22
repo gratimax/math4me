@@ -34,7 +34,7 @@ io.on('connection', function (socket) {
     socket.join(newGame.getRoom());
     let user = newGame.addUser(data.name);
     socketGame = newGame;
-    socket.emit('joinedGame', {userId: user.id, name: data.name});
+    io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
   });
 
   socket.on('joinGame', function (data) {
@@ -52,27 +52,30 @@ io.on('connection', function (socket) {
         socket.join(joinGame.getRoom());
         let user = joinGame.addUser(data.name);
         socket.emit('joinedGame', {userId: user.id, name: data.name});
-        io.to(joinGame.getRoom()).emit('userJoined', {userId: user.id, name: data.name});
+        io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
       }
     }
   });
 
   socket.on('startGame', function () {
-    let timer = null;
-    function doTick() {
+    function newProblem() {
       console.log('tick game' + socketGame.id);
       if (socketGame.canMakeProblem()) {
         let prob = socketGame.makeProblem();
-        io.to(socketGame.getRoom()).emit('newProblem', {given: prob.given, goal: prob.goal});
+        io.to(socketGame.getRoom()).emit('newProblem', {given: prob.given, goal: prob.getGoalString()});
+        setTimeout(sendAnswer, 15 * 1000);
       } else {
-        clearInterval(timer);
         socketGame.finish();
         io.to(socketGame.getRoom()).emit('finishedGame');
       }
     }
+    function sendAnswer() {
+      io.to(socketGame.getRoom()).emit('answerProblem', {expr: socketGame.getProblemAnswer()});
+      setTimeout(newProblem, 5 * 1000);
+    }
     if (socketGame) {
-      doTick();
-      timer = setInterval(doTick, 1000);
+      io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
+      newProblem();
     }
   });
 
