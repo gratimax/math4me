@@ -1,3 +1,3 @@
-web: npm run setup && npm run run
+web: npm install && ./node_modules/.bin/tsd install  && npm run run
 
 
