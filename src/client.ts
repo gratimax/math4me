@@ -4,6 +4,8 @@ import setupUI from "./client/ui/setup";
 import * as GameRole from "./client/gameRole";
 import * as ClientGame from "./client/clientGame";
 
+import User from "./user";
+
 setupUI();
 
 function getConnectUrl() {
@@ -23,6 +25,7 @@ while (!name) {
 
 socket.on('connect', () => {
   let game: ClientGame.ClientGame = new ClientGame.ClientGame(-1);
+  let user: User = null;
   let gameRole = GameRole.create();
 
   window['game'] = game;
@@ -34,15 +37,17 @@ socket.on('connect', () => {
       alert(data.reason);
     });
     socket.once('joinedGame', (data) => {
-      console.log(data);
+      user = new User(data.userId, name);
+      console.log(user);
     });
     socket.emit('joinGame', {id: role.id, name: name});
 
   } else {
     socket.once('createdGame', (data) => {
       game.id = data.id;
+      user = new User(0, name);
+      console.log(user);
     });
     socket.emit('createGame', {name: name});
   }
-  console.log("socket " + socket.toString() + " setup");
 });
