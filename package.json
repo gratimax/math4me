@@ -4,7 +4,8 @@
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "socket.io": "^1.4.6",
-    "socket.io-client": "~1.4.6"
+    "socket.io-client": "~1.4.6",
+    "mathjs": "~3.2.1"
   },
   "scripts": {
     "run": "tsc && browserify dist/client.js -o public/bundle.js && node dist/server.js",
