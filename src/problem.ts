@@ -37,7 +37,7 @@ export class Problem {
         var tok = toks[i];
         if(tok != "") {
           var num = parseInt(tok);
-          if(num != NaN) {
+          if(!isNaN(num)) {
             var index = given.indexOf(num);
             if(index == -1)
               return false;
@@ -48,7 +48,7 @@ export class Problem {
           }
         }
       }
-      return true;
+      return given.length == 0;
     }
     return false;
   }
