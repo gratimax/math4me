@@ -7,7 +7,8 @@ export class Problem {
   constructor(
     public goal: any,
     public given: Array<number>,
-    public expr: string) {
+    public expr: string,
+    public ops: string[]) {
     given.sort();
   }
 
@@ -32,17 +33,19 @@ export function getProblem(min: number, max:number, n: number, transforms = defa
     for (var i=0; i<n; i++) {
       nums[i] = logic.getRandomInt(min, max);
     }
-    var expr = logic.gen(nums, transforms).toString();
+    var tup = logic.gen(nums, transforms);
+    var expr = tup[0].toString();
+    var ops = tup[1].map((t: logic.OpTransform) => t.op);
     try {
       var goal = math.eval(expr);
-      return new Problem(goal, nums, expr);
+      return new Problem(goal, nums, expr, ops);
     } catch(e) { }
   }
 }
 
 export var defaultTransforms = [
-  logic.opTransform("+"),
-  logic.opTransform("-"),
-  logic.opTransform("*"),
-  logic.opTransform("/")
+  new logic.OpTransform("+"),
+  new logic.OpTransform("-"),
+  new logic.OpTransform("*"),
+  new logic.OpTransform("/")
 ];
