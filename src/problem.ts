@@ -7,7 +7,7 @@ export class Problem {
   constructor(
     public goal: any,
     public given: Array<number>,
-    public expr: String) {
+    public expr: string) {
     given.sort();
   }
 
@@ -18,6 +18,10 @@ export class Problem {
       return s+frac.n.toString();
     else
       return s+frac.n.toString()+"/"+frac.d.toString();
+  }
+
+  isRight(expr: string): boolean {
+    return math.eval(expr) == this.goal;
   }
 
 }

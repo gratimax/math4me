@@ -51,9 +51,6 @@ io.on('connection', function (socket) {
     }
   });
 
-  /*
-  /(([0-9]+)[^0-9]*)+/g;*/
-
   socket.on('startGame', function () {
     let timer = null;
     function doTick() {
@@ -69,6 +66,16 @@ io.on('connection', function (socket) {
     if (socketGame) {
       doTick();
       timer = setInterval(doTick, 30 * 60);
+    }
+  });
+
+  socket.on('entered', function (data) {
+    let date = new Date();
+    if (socketGame) {
+      if (socketGame.isRight(data.expr)) {
+        let score = socketGame.getScore(date);
+        socketGame.incrementScore(data.userId, score);
+      }
     }
   });
 

@@ -9,7 +9,7 @@ export namespace GameStage {
 
   export class WaitingForUsers implements Stage {}
   export class Playing implements Stage {
-    constructor(public problem: problem.Problem) {}
+    constructor(public problem: problem.Problem, public date: Date) {}
   }
   export class Concluded implements Stage {}
 
@@ -30,7 +30,7 @@ export class Game {
     this.stage = new GameStage.WaitingForUsers();
   }
 
-  addUser(name: String): User {
+  addUser(name: string): User {
     let newUser = new User(this.users.length, name);
     this.users.push(newUser);
     return newUser;
@@ -46,13 +46,34 @@ export class Game {
 
   makeProblem(): problem.Problem {
     let prob = problem.getProblem(0, 10, 5);
-    this.stage = new GameStage.Playing(prob);
+    this.stage = new GameStage.Playing(prob, new Date());
     this.round--;
     return prob;
   }
 
   finish() {
     this.stage = new GameStage.Concluded();
+  }
+  
+  isRight(expr: string): boolean {
+    if (this.stage instanceof GameStage.Playing) {
+      return (this.stage as GameStage.Playing).problem.isRight(expr);
+    } else {
+      return false;
+    }
+  }
+
+  getScore(date: Date): number {
+    let stageDate = (this.stage as GameStage.Playing).date;
+    return (date.getTime() - stageDate.getTime())/1000;
+  }
+
+  incrementScore(userId: number, score: number) {
+    if (userId in this.score) {
+      this.score[userId] = this.score[userId] + score;
+    } else {
+      this.score[userId] = score;
+    }
   }
   
 }
