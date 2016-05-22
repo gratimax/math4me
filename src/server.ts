@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
     function newProblem() {
       console.log('tick game' + socketGame.id + ', #' + socketGame.round);
       if (socketGame.canMakeProblem(settings.numProblems)) {
-        let prob = socketGame.makeProblem(settings.numGivenNumbers);
+        let prob = socketGame.makeProblem(settings.numGivenNumbers, settings.maxOption, settings.enableDivision);
         io.to(socketGame.getRoom()).emit('newProblem', {
           given: prob.given, goal: prob.getGoalString(), ops: prob.ops, problemNumber: prob.problemNumber});
         setTimeout(sendAnswer, settings.secondsEachProblem * 1000);

@@ -2,6 +2,7 @@ import User from "./user";
 import * as problem from "./problem";
 import * as constants from "./constants";
 import {GameSettings} from "./settings";
+import * as logic from "./logic";
 
 let gameId = 0;
 
@@ -48,9 +49,13 @@ export class Game {
     return this.round < max;
   }
 
-  makeProblem(num_nums: number): problem.Problem {
+  makeProblem(num_nums: number, maxOption: number, enableDivision: boolean): problem.Problem {
     this.round++;
-    let prob = problem.getProblem(constants.MIN_NUM, constants.MAX_NUM, num_nums);
+    let transform = problem.defaultTransforms;
+    if (enableDivision) {
+      transform = transform.concat([new logic.OpTransform("/")]);
+    }
+    let prob = problem.getProblem(constants.MIN_NUM, maxOption, num_nums, transform);
     prob.problemNumber = this.round;
     this.stage = new GameStage.Playing(prob, new Date());
     return prob;

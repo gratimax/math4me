@@ -26,6 +26,8 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
   updateSettings() {
     let settings = new GameSettings();
     settings.numGivenNumbers = (this.refs["numGivenNumbers"] as any).value;
+    settings.maxOption = (this.refs["maxOption"] as any).value;
+    settings.enableDivision = !!(this.refs["enableDivision"] as any).checked;
     settings.secondsEachProblem = (this.refs["secondsEachProblem"] as any).value;
     settings.numProblems = (this.refs["numProblems"] as any).value;
     this.props.handler('updateSettings', settings);
@@ -51,6 +53,16 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
             <input type="range" min="1" max="10" step="1" ref="numGivenNumbers" value={settings.numGivenNumbers}/>
           </div>
           <div className="form-group">
+            <label>Maximum number of option: {settings.maxOption}</label>
+            <input type="range" min="1" max="20" step="1" ref="maxOption" value={settings.maxOption}/>
+          </div>
+          <div className="form-group">
+            <label>Enable division:&nbsp;</label>
+            <input type="checkbox" ref="enableDivision" checked={settings.enableDivision?"checked":null}
+                   onClick={this.updateSettings.bind(this)}/>
+            {settings.enableDivision?"yes":"no"}
+          </div>
+          <div className="form-group">
             <label>Time for each problem: {settings.secondsEachProblem} seconds</label>
             <input type="range" min="1" max="45" step="1" ref="secondsEachProblem" value={settings.secondsEachProblem}/>
           </div>
@@ -63,6 +75,8 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
       let settings = this.props.settings;
       settingsPanel = <ul className="list-item-group no-margin-left">
         <li className="list-group-item">Number of options per problem: {settings.numGivenNumbers}</li>
+        <li className="list-group-item">Maximum number of option: {settings.maxOption}</li>
+        <li className="list-group-item">Enable division: {settings.enableDivision?"yes":"no"}</li>
         <li className="list-group-item">Time for each problem: {settings.secondsEachProblem} seconds</li>
         <li className="list-group-item">Total number of problems: {settings.numProblems}</li>
       </ul>;

@@ -60,6 +60,20 @@ export class PromptNameGameScreen extends React.Component<Props, {errors:string}
               </form>
             </div>
           </div>
+          <div className="panel panel-default">
+            <div className="panel-heading">
+              <h3 className="panel-title">Directions</h3>
+            </div>
+            <div className="panel-body">
+              <ol>
+                <li>Create a game by visiting Math4Me's homepage, and share the link given in the lobby page with others.</li>
+                <li>Configure the game before it starts in the lobby page, then hit 'start game' to start.</li>
+                <li>The goal is to use your calculator and the provided numbers and operations to get the goal number.</li>
+                <li>You are scored based on how quickly you can answer the question, if at all, and the person with the highest
+                score after all the questions wins.</li>
+              </ol>
+            </div>
+          </div>
         </div>
       </div>
     );
