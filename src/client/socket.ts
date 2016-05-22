@@ -27,7 +27,6 @@ export default function setupSocket() {
 
     if (gameRole instanceof GameRole.JoiningGame) {
       let role = gameRole as GameRole.JoiningGame;
-      alert('hay');
       console.log(role.id);
       socket.once('didNotJoinGame', (data) => {
         alert(data.reason);
