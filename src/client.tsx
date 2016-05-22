@@ -5,16 +5,20 @@ import * as socket from "socket.io-client";
 
 var io = socket.connect(window.location.href);
 
-class Hello extends React.Component<any, {}> {
-  wow(event) {
-    alert(this.props.to);
-  }
+class GameUI extends React.Component<{}, {}> {
   render() {
-    return <h1 onClick={(evt) => this.wow(evt)}>Hello, {this.props.to}!</h1>;
+    return (
+      <nav className="navbar navbar-default navbar-inverse navbar-static-top">
+        <div className="container">
+          <div className="navbar-header">
+            <a className="navbar-brand" href="#">Math4Me</a>
+          </div>
+        </div>
+      </nav>);
   }
 }
 
 ReactDOM.render(
-  <Hello to="Tom"/>,
+  <GameUI/>,
   document.getElementById("container")
 );
