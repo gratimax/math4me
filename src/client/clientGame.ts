@@ -50,6 +50,10 @@ export namespace GameStage {
     constructor(public problem: ClientProblem, public answer: string) {}
   }
 
+  export class FinishedGame implements GameStage {
+    
+  }
+
 }
 
 export class ClientGame {
@@ -59,7 +63,8 @@ export class ClientGame {
     public role: GameRole.GameRole,
     public stage: GameStage.GameStage,
     public users: Array<User>,
-    public socket: SocketIOClient.Socket) {}
+    public socket: SocketIOClient.Socket,
+    public totalProblems: number) {}
 
   static getConnectUrl(): String {
     let href = window.location.href;

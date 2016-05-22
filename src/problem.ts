@@ -9,7 +9,8 @@ export class Problem {
     public given: Array<number>,
     public expr: string,
     public ops: string[],
-    public usersCorrect: Array<number> = []) {
+    public usersCorrect: Array<number> = [],
+    public problemNumber: number = 0) {
     given.sort();
   }
 

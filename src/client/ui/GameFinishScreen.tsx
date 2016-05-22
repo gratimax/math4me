@@ -5,11 +5,9 @@ import {ClientProblem} from "../clientProblem";
 
 interface Props {
   game: ClientGame;
-  problem: ClientProblem;
-  answer: String
 }
 
-export class AnswerScreen extends React.Component<Props, {}> {
+export class GameFinishScreen extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
   }
@@ -19,35 +17,23 @@ export class AnswerScreen extends React.Component<Props, {}> {
     if (this.props.game.users) {
       liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}/>
     }
-    let problem = this.props.problem;
     return (
       <div className="row">
         <div className="col-md-4">
-          <div className="panel panel-default">
+          <div className="panel panel-info">
             <div className="panel-heading">
-              <h3 className="panel-title">Problem {problem.problemNumber}/{this.props.game.totalProblems}</h3>
+              <h3 className="panel-title">Finished!</h3>
             </div>
             <div className="panel-body">
-              <p>
-                Goal: {problem.goal}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="panel panel-success">
-            <div className="panel-heading">
-              <h3 className="panel-title">Answer</h3>
-            </div>
-            <div className="panel-body">
-              {this.props.answer}
+              <p>Good job everybody, all {this.props.game.users.length} of you!</p>
+              <a href="/">Start another game?</a>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="panel panel-default">
             <div className="panel-heading">
-              <h3 className="panel-title">Users</h3>
+              <h3 className="panel-title">Scores</h3>
             </div>
             <div className="panel-body">
               {liGroup}

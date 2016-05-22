@@ -22,7 +22,7 @@ export class Game {
   public id: number;
   public stage: GameStage.Stage = new GameStage.WaitingForUsers();
   public score: {[id: number]: number} = {};
-  public round: number = 10;
+  public round: number = 0;
 
   constructor() {
     this.users = [];
@@ -42,13 +42,14 @@ export class Game {
   }
 
   canMakeProblem(): boolean {
-    return this.round > 0;
+    return this.round < constants.NUMBER_PROBLEMS;
   }
 
   makeProblem(): problem.Problem {
+    this.round++;
     let prob = problem.getProblem(0, 3, 1);
+    prob.problemNumber = this.round;
     this.stage = new GameStage.Playing(prob, new Date());
-    this.round--;
     return prob;
   }
 

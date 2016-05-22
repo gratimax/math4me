@@ -7,6 +7,7 @@ import {WaitingGameScreen} from "./ui/WaitingGameScreen";
 import {StartedLobbyScreen} from "./ui/StartedLobbyScreen";
 import {ProblemScreen} from "./ui/ProblemScreen";
 import {AnswerScreen} from "./ui/AnswerScreen";
+import {GameFinishScreen} from "./ui/GameFinishScreen";
 
 interface Props {
   game: ClientGame;
@@ -41,6 +42,8 @@ export class GameUI extends React.Component<Props, {}> {
     } else if (s instanceof GameStage.AnswerProblem) {
       let stage = s as GameStage.AnswerProblem;
       screen = <AnswerScreen game={this.props.game} problem={stage.problem} answer={stage.answer}/>
+    } else if (s instanceof GameStage.FinishedGame) {
+      screen = <GameFinishScreen game={this.props.game}/>
     }
     return (
       <div>

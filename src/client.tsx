@@ -18,12 +18,13 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         GameRole.create(),
         new GameStage.PromptingForName(),
         null,
+        null,
         null
       )
     };
   }
   
-  handleSocket(name: String) {
+  handleSocket(name: string) {
     let game = this.state.game;
 
     localStorage['debug'] = '*:socket';
@@ -32,7 +33,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
 
     function onUsers(data: any) {
       game.users = data.users.map(
-        (obj: {id: number, name: String}) => {
+        (obj: {id: number, name: string}) => {
           if (obj.id == game.user.id) {
             return game.user;
           } else {
@@ -58,6 +59,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         });
         socket.once('joinedGame', (data) => {
           game.user = new User(data.userId, name, 0);
+          game.totalProblems = data.numProblems;
           game.stage = new GameStage.WaitingLobby();
           socket.on('allUsers', (data) => {
             onUsers(data);
@@ -72,6 +74,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         this.forceUpdate();
         socket.once('createdGame', (data) => {
           game.id = data.id;
+          game.totalProblems = data.numProblems;
           game.user = new User(0, name, 0);
           game.stage = new GameStage.StartedLobby();
           this.forceUpdate();
@@ -91,7 +94,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
     game.stage = new GameStage.Waiting("Game is about to start!");
     this.forceUpdate();
     socket.on('newProblem', (data) => {
-      let problem = new ClientProblem(data.given, data.goal, data.ops);
+      let problem = new ClientProblem(data.given, data.goal, data.ops, data.problemNumber);
       game.stage = new GameStage.DoingProblem(problem);
       this.forceUpdate();
     });
@@ -101,16 +104,32 @@ class Main extends React.Component<{}, {game: ClientGame}> {
       this.forceUpdate();
     });
     socket.on('userScore', this.onUserScore.bind(this));
+    socket.on('finishedGame', (data) => {
+      let scores: [[number, number]] = data.scores;
+      for (let i = 0; i < scores.length; i++) {
+        let sc = scores[i];
+        this.setUserScore(sc[0], sc[1]);
+      }
+      game.users.sort((a, b) => {
+        return b.score - a.score;
+      })
+      game.stage = new GameStage.FinishedGame();
+      this.forceUpdate();
+    })
   }
 
-  onUserScore(data: {userId: number, score: number}) {
+  setUserScore(userId: number, score: number) {
     let game = this.state.game;
     for (var i = 0; i < game.users.length; i++) {
       let user = game.users[i];
-      if (user.id == data.userId) {
-        user.score = data.score;
+      if (user.id == userId) {
+        user.score = score;
       }
     }
+  }
+
+  onUserScore(data: {userId: number, score: number}) {
+    this.setUserScore(data.userId, data.score);
     this.forceUpdate();
   }
 

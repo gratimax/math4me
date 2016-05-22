@@ -25,7 +25,7 @@ io.on('connection', function (socket) {
   socket.on('createGame', function (data) {
     var newGame = new game.Game();
     game.addGame(newGame);
-    socket.emit('createdGame', {id: newGame.id});
+    socket.emit('createdGame', {id: newGame.id, numProblems: constants.NUMBER_PROBLEMS});
     console.log('joining to room ' + newGame.getRoom());
     socket.join(newGame.getRoom());
     let user = newGame.addUser(data.name);
@@ -47,7 +47,7 @@ io.on('connection', function (socket) {
         console.log('joining to room ' + joinGame.getRoom());
         socket.join(joinGame.getRoom());
         let user = joinGame.addUser(data.name);
-        socket.emit('joinedGame', {userId: user.id, name: data.name});
+        socket.emit('joinedGame', {userId: user.id, name: data.name, numProblems: constants.NUMBER_PROBLEMS});
         io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
       }
     }
@@ -58,11 +58,15 @@ io.on('connection', function (socket) {
       console.log('tick game' + socketGame.id + ', #' + socketGame.round);
       if (socketGame.canMakeProblem()) {
         let prob = socketGame.makeProblem();
-        io.to(socketGame.getRoom()).emit('newProblem', {given: prob.given, goal: prob.getGoalString(), ops: prob.ops});
+        io.to(socketGame.getRoom()).emit('newProblem', {
+          given: prob.given, goal: prob.getGoalString(), ops: prob.ops, problemNumber: prob.problemNumber});
         setTimeout(sendAnswer, constants.NUM_SECONDS_GIVEN * 1000);
       } else {
         socketGame.finish();
-        io.to(socketGame.getRoom()).emit('finishedGame');
+        let scores = socketGame.users.map((user) => {
+          return [user.id, socketGame.score[user.id]];
+        })
+        io.to(socketGame.getRoom()).emit('finishedGame', {scores: scores});
       }
     }
     function sendAnswer() {

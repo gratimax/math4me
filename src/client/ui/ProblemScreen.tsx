@@ -1,9 +1,13 @@
 import * as React from "react";
+var math = require('mathjs');
+
 import {ClientGame} from "../clientGame";
 import {UserList} from "./UserList";
 import {ClientProblem} from "../clientProblem";
+
 import * as constants from "../../constants";
-var math = require('mathjs');
+import {TimeProgress} from "./TimeProgress";
+
 math.config({
   number: 'Fraction'
 });
@@ -17,8 +21,6 @@ interface Props {
 interface State {
   kept: Array<number|string>,
   numberIdsUsed: Array<number>
-  counter: any,
-  secondsRemaining: number
 }
 
 class Op extends React.Component<{handler: any, op: string}, {}> {
@@ -52,18 +54,9 @@ export class ProblemScreen extends React.Component<Props, State> {
   initialState(): State {
     let obj = {
       kept: [],
-      numberIdsUsed: [],
-      secondsRemaining: constants.NUM_SECONDS_GIVEN,
-      counter: setInterval(() => {
-        obj.secondsRemaining--;
-        this.forceUpdate();
-      }, 1000)
+      numberIdsUsed: []
     };
     return obj;
-  }
-
-  startGame() {
-    this.props.handler('startGame', {});
   }
 
   pressedOp(name: string) {
@@ -86,12 +79,7 @@ export class ProblemScreen extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(props: Props) {
-    clearInterval(this.state.counter);
     this.setState(this.initialState());
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.state.counter);
   }
 
   eval() {
@@ -102,10 +90,6 @@ export class ProblemScreen extends React.Component<Props, State> {
     } catch (e) {
       return "";
     }
-  }
-
-  getProgressWidth() {
-    return `${this.state.secondsRemaining/(constants.NUM_SECONDS_GIVEN) * 100}%`;
   }
 
   render() {
@@ -120,17 +104,13 @@ export class ProblemScreen extends React.Component<Props, State> {
         <div className="col-md-4">
           <div className="panel panel-default">
             <div className="panel-heading">
-              <h3 className="panel-title">Problem</h3>
+              <h3 className="panel-title">Problem {problem.problemNumber}/{this.props.game.totalProblems}</h3>
             </div>
             <div className="panel-body">
               <p>
                 Goal: {problem.goal}
               </p>
-              <div className="progress">
-                <div className="progress-bar" style={{width: this.getProgressWidth()}}>
-                  {this.state.secondsRemaining}s
-                </div>
-              </div>
+              <TimeProgress totalSeconds={constants.NUM_SECONDS_GIVEN}/>
             </div>
           </div>
         </div>
