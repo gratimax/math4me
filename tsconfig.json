@@ -27,7 +27,7 @@
     },
     "files": [
       "./typings/tsd.d.ts",
-      "./src/index.ts",
-      "./src/client.ts"
+      "./src/server.ts",
+      "./src/client.tsx"
     ]
 }

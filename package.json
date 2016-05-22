@@ -2,10 +2,11 @@
   "dependencies": {
     "express": "^4.13.4",
     "react": "^15.1.0",
+    "react-dom": "^15.1.0",
     "socket.io": "^1.4.6"
   },
   "scripts": {
-    "run": "tsc && browserify dist/client.js -o public/bundle.js && node dist/index.js",
+    "run": "tsc && browserify dist/client.js -o public/bundle.js && node dist/server.js",
     "setup": "npm install && tsd install"
   },
   "devDependencies": {

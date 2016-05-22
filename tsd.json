@@ -25,6 +25,12 @@
     },
     "mime/mime.d.ts": {
       "commit": "816f03f3e4a97c0f4b5dd12bb1302a1d3b8b9f7c"
+    },
+    "react/react-dom.d.ts": {
+      "commit": "816f03f3e4a97c0f4b5dd12bb1302a1d3b8b9f7c"
+    },
+    "socket.io-client/socket.io-client.d.ts": {
+      "commit": "816f03f3e4a97c0f4b5dd12bb1302a1d3b8b9f7c"
     }
   }
 }
