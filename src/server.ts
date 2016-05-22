@@ -103,6 +103,7 @@ io.on('connection', function (socket) {
       }
       try {
         let result = problem.eval(data.expr);
+        console.log(result);
         io.to(socketGame.getRoom()).emit('userGotValue', {userId: data.userId, value: result});
       } catch (e) {}
     }

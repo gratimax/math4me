@@ -70,9 +70,10 @@ export class UserList extends React.Component<ListProps, {}> {
         }
       })
     }
+    console.log(this.props.currentValues);
     return <ul className="list-group">
       {this.props.users.map((user) => {
-        return <UserDisplay key={user.id} user={user} currentUser={this.props.currentUser} displayScore={this.props.displayScore}
+        return <UserDisplay key={user.id}  user={user} currentUser={this.props.currentUser} displayScore={this.props.displayScore}
           displayCrown={crownIds.indexOf(user.id) != -1} gotIt={this.props.whoGotIt.indexOf(user.id) != -1}
                             currentValue={this.props.currentValues[user.id]}/>
       })}

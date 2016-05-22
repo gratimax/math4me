@@ -38,6 +38,7 @@ export class PromptNameGameScreen extends React.Component<Props, {errors:string}
     return (
       <div className="row">
         <div className="col-md-4 col-md-offset-4">
+          <h1 className="text-center no-padding-top">Math4Me</h1>
           <div className="panel panel-default">
             <div className="panel-heading">
               <h3 className="panel-title">{gameRoleName}</h3>
@@ -48,7 +49,7 @@ export class PromptNameGameScreen extends React.Component<Props, {errors:string}
                 <div className={"form-group"+(hasErrors?" has-error":"")}>
                   <input type="text" className="form-control"
                          placeholder="Username" ref="username" id="username"
-                         onChange={this.clearErrors.bind(this)}/>
+                         onChange={this.clearErrors.bind(this)} autoComplete="off"/>
                   {hasErrors ?
                     <span className="help-block"
                           dangerouslySetInnerHTML={{__html: this.state.errors}}>
@@ -69,8 +70,10 @@ export class PromptNameGameScreen extends React.Component<Props, {errors:string}
                 <li>Create a game by visiting Math4Me's homepage, and share the link given in the lobby page with others.</li>
                 <li>Configure the game before it starts in the lobby page, then hit 'start game' to start.</li>
                 <li>The goal is to use your calculator and the provided numbers and operations to get the goal number.</li>
-                <li>You are scored based on how quickly you can answer the question, if at all, and the person with the highest
-                score after all the questions wins.</li>
+                <li>
+                  You are scored based on how quickly you can answer the question, if at all, and the person with the highest
+                  score after all the questions wins.
+                </li>
               </ul>
             </div>
           </div>
