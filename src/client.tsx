@@ -15,7 +15,7 @@ class Main extends React.Component<{}, ClientGame> {
 
   constructor(props: {}) {
     super(props);
-    this.state = new ClientGame(null, null, GameRole.create(), null);
+    this.state = new ClientGame(null, null, GameRole.create(), new GameStage.PromptingForName());
   }
 
   updateState() {
@@ -55,12 +55,15 @@ class Main extends React.Component<{}, ClientGame> {
     });
   }
 
-  componentDidMount() {
-    this.handleSocket();
+  eventHandler(evt, data) {
+    if (evt == 'gotName') {
+      this.handleSocket();
+    }
   }
 
+
   render() {
-    return <ui.GameUI game={this.state}/>;
+    return <ui.GameUI game={this.state} handler={this.eventHandler.bind(this)}/>;
   }
 
 }

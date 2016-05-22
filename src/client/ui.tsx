@@ -3,9 +3,14 @@ import * as React from "react";
 import {ClientGame, GameStage} from "./clientGame";
 import {RejectedGameScreen} from "./ui/RejectedGameScreen";
 
-export class GameUI extends React.Component<{game: ClientGame}, {}> {
+interface Props {
+  game: ClientGame,
+  handler: (string, any) => {}
+}
 
-  constructor(props: {game: ClientGame}) {
+export class GameUI extends React.Component<Props, {}> {
+
+  constructor(props: Props) {
     super(props);
   }
 

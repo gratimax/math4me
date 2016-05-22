@@ -26,6 +26,10 @@ export namespace GameStage {
 
   export interface GameStage {}
 
+  export class PromptingForName implements GameStage {
+    
+  }
+
   export class JoinGameFailed implements GameStage {
     constructor(public reason: string) {}
   }
