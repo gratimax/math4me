@@ -114,7 +114,7 @@ export class ProblemScreen extends React.Component<Props, State> {
   eval() {
     if (this.state.kept.length > 0) {
       try {
-        let expr = this.keptSanitized().join('');
+        let expr = this.keptSanitized().join(' ');
         this.props.handler('haveExpr', expr);
         return ProblemScreen.getFracString(math.eval(expr));
       } catch (e) {
