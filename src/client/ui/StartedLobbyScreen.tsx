@@ -51,7 +51,7 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
             <input type="range" min="1" max="10" step="1" ref="numGivenNumbers" value={settings.numGivenNumbers}/>
           </div>
           <div className="form-group">
-            <label>Time for each problem: {settings.secondsEachProblem}</label>
+            <label>Time for each problem: {settings.secondsEachProblem} seconds</label>
             <input type="range" min="1" max="45" step="1" ref="secondsEachProblem" value={settings.secondsEachProblem}/>
           </div>
           <div className="form-group">
@@ -62,9 +62,9 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
     } else {
       let settings = this.props.settings;
       settingsPanel = <ul className="list-item-group no-margin-left">
-        <li className="list-group-item">number of options per problem: {settings.numGivenNumbers}</li>
-        <li className="list-group-item">time for each problem: {settings.secondsEachProblem} seconds</li>
-        <li className="list-group-item">total number of problems: {settings.numProblems}</li>
+        <li className="list-group-item">Number of options per problem: {settings.numGivenNumbers}</li>
+        <li className="list-group-item">Time for each problem: {settings.secondsEachProblem} seconds</li>
+        <li className="list-group-item">Total number of problems: {settings.numProblems}</li>
       </ul>;
     }
     return (
