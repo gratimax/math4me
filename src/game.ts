@@ -1,4 +1,4 @@
-import * as User from "./user";
+import User from "./user";
 
 class Game {
   users: Array<User>;
