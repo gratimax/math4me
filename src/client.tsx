@@ -60,7 +60,11 @@ class Main extends React.Component<{}, {game: ClientGame}> {
           socket.on('allUsers', (data) => {
             game.users = data.users.map(
               (obj: {id: number, name: String}) => {
-                return new User(obj.id, obj.name);
+                if (obj.id == game.user.id) {
+                  return game.user;
+                } else {
+                  return new User(obj.id, obj.name);
+                }
               }
             );
             this.forceUpdate();

@@ -1,19 +1,10 @@
 import * as React from "react";
 import {ClientGame} from "../clientGame";
-import User from "../../user";
+import {UserList} from "./UserList";
 
 interface Props {
   game: ClientGame;
   handler: (string, any) => {}
-}
-
-class UserDisplay extends React.Component<{user: User}, {}> {
-  constructor(props: {user: User}) {
-    super(props);
-  }
-  render() {
-    return <li className="list-group-item">{this.props.user.name}</li>;
-  }
 }
 
 export class StartedLobbyScreen extends React.Component<Props, {}> {
@@ -24,11 +15,7 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
   render() {
     let liGroup = null;
     if (this.props.game.users) {
-      liGroup = <ul className="list-group">
-        {this.props.game.users.map((user) => {
-          return <UserDisplay key={user.id} user={user}/>
-        })}
-      </ul>;
+      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user}/>
     }
     return (
       <div className="row">
@@ -38,8 +25,9 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
               <h3 className="panel-title">Game Controls</h3>
             </div>
             <div className="panel-body">
-              Link to share: {this.props.game.getLink()}
-              <br/>
+              <p>
+                Link to share: {this.props.game.getLink()}
+              </p>
               <button className="btn btn-primary">Start Game</button>
             </div>
           </div>
