@@ -3,12 +3,12 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as socket from "socket.io-client";
 
-var math = require("mathjs");
+let math = require("mathjs");
 math.config({
   number: 'Fraction'
 });
 
-var io = socket.connect(window.location.href);
+let io = socket.connect(window.location.href);
 
 class GameUI extends React.Component<{}, {}> {
   render() {
@@ -19,7 +19,8 @@ class GameUI extends React.Component<{}, {}> {
             <a className="navbar-brand" href="#">Math4Me</a>
           </div>
         </div>
-      </nav>);
+      </nav>
+    );
   }
 }
 

@@ -1,7 +1,8 @@
-
-export class Game {
+class Game {
   constructor(public id: string) {
   }
 }
 
-var games: Array<Game> = [];
+let games: {[id: string]: Game} = {};
+
+export {Game, games};
