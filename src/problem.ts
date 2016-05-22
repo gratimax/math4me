@@ -34,9 +34,9 @@ export function getProblem(min: number, max:number, n: number, transforms = defa
     }
     var expr = logic.gen(nums, transforms).toString();
     var goal = math.eval(expr);
-    if (goal.d != 0) {
+    try {
       return new Problem(goal, nums, expr);
-    }
+    } catch(e) { }
   }
 }
 

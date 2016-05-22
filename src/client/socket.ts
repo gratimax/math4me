@@ -11,7 +11,7 @@ function getConnectUrl() {
 }
 
 export default function setupSocket() {
-  localStorage['debug'] = '*';
+  localStorage['debug'] = '*:socket';
   window['socket'] = socket = SocketIOClient.connect(getConnectUrl());
 
   let name = '';
