@@ -20,6 +20,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         new GameStage.PromptingForName(),
         null,
         null,
+        null,
         null
       )
     };
@@ -59,7 +60,8 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         });
         socket.once('joinedGame', (data) => {
           game.user = new User(data.userId, name, 0);
-          game.totalProblems = data.numProblems;
+          game.totalProblems = data.settings.numProblems;
+          game.timeGiven = data.settings.secondsEachProblem;
           game.stage = new GameStage.WaitingLobby(GameSettings.fromObject(data.settings));
           socket.on('allUsers', (data) => {
             onUsers(data);
@@ -71,6 +73,8 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         socket.on('settingsChanged', (data) => {
           let stage = game.stage as GameStage.WaitingLobby;
           stage.settings = GameSettings.fromObject(data.settings);
+          game.totalProblems = data.settings.numProblems;
+          game.timeGiven = data.settings.secondsEachProblem;
           this.forceUpdate();
         })
         socket.emit('joinGame', {id: id, name: name});
@@ -79,7 +83,9 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         this.forceUpdate();
         socket.once('createdGame', (data) => {
           game.id = data.id;
-          game.totalProblems = data.numProblems;
+          let initialSettings = new GameSettings();
+          game.totalProblems = initialSettings.numProblems;
+          game.timeGiven = initialSettings.secondsEachProblem;
           game.user = new User(0, name, 0);
           game.stage = new GameStage.StartedLobby(new GameSettings());
           this.forceUpdate();
@@ -159,6 +165,17 @@ class Main extends React.Component<{}, {game: ClientGame}> {
     game.socket.emit('entered', {userId: game.user.id, expr: expr});
   }
 
+  updateSettings(settings: GameSettings) {
+    let game = this.state.game;
+    let stage = game.stage as GameStage.StartedLobby;
+    game.totalProblems = settings.numProblems;
+    game.timeGiven = settings.secondsEachProblem;
+    console.log(game.timeGiven);
+    stage.settings = settings;
+    this.forceUpdate();
+    game.socket.emit('changeSettings', {settings: settings});
+  }
+
   eventHandler(evt, data) {
     if (evt == 'gotName') {
       this.handleSocket(data);
@@ -166,6 +183,8 @@ class Main extends React.Component<{}, {game: ClientGame}> {
       this.startGame();
     } else if (evt == 'haveExpr') {
       this.haveExpr(data);
+    } else if (evt == 'updateSettings') {
+      this.updateSettings(data);
     }
   }
 

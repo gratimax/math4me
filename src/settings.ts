@@ -9,7 +9,7 @@ export class GameSettings {
 
   static fromObject(that: any): GameSettings {
     return new GameSettings(
-      that.givenNumbers,
+      that.numGivenNumbers,
       that.secondsEachProblem,
       that.numProblems
     );

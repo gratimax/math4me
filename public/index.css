@@ -14,3 +14,8 @@
 .no-padding-top {
   margin-top: 4px;
 }
+
+.no-margin-left {
+  margin-left: 0;
+  padding-left: 0;
+}

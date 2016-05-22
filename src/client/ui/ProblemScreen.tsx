@@ -199,7 +199,7 @@ export class ProblemScreen extends React.Component<Props, State> {
               <h3 className="no-padding-top">
                 Goal: {problem.goal}
               </h3>
-              <TimeProgress totalSeconds={constants.NUM_SECONDS_GIVEN}/>
+              <TimeProgress totalSeconds={this.props.game.timeGiven}/>
             </div>
           </div>
         </div>

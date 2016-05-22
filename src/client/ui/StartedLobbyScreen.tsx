@@ -23,6 +23,14 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
     this.props.handler('startGame', {});
   }
 
+  updateSettings() {
+    let settings = new GameSettings();
+    settings.numGivenNumbers = (this.refs["numGivenNumbers"] as any).value;
+    settings.secondsEachProblem = (this.refs["secondsEachProblem"] as any).value;
+    settings.numProblems = (this.refs["numProblems"] as any).value;
+    this.props.handler('updateSettings', settings);
+  }
+
   render() {
     let liGroup = null;
     if (this.props.game.users) {
@@ -35,9 +43,29 @@ export class StartedLobbyScreen extends React.Component<Props, {}> {
     }
     let settingsPanel;
     if (this.props.mainUser) {
-      settingsPanel = [];
+      let settings = this.props.settings;
+      settingsPanel =
+        <form onChange={this.updateSettings.bind(this)}>
+          <div className="form-group">
+            <label>Number of options per problem: {settings.numGivenNumbers}</label>
+            <input type="range" min="1" max="10" step="1" ref="numGivenNumbers" value={settings.numGivenNumbers}/>
+          </div>
+          <div className="form-group">
+            <label>Time for each problem: {settings.secondsEachProblem}</label>
+            <input type="range" min="1" max="45" step="1" ref="secondsEachProblem" value={settings.secondsEachProblem}/>
+          </div>
+          <div className="form-group">
+            <label>Total number of problems: {settings.numProblems}</label>
+            <input type="range" min="1" max="20" step="1" ref="numProblems" value={settings.numProblems}/>
+          </div>
+        </form>;
     } else {
-      settingsPanel = [];
+      let settings = this.props.settings;
+      settingsPanel = <ul className="list-item-group no-margin-left">
+        <li className="list-group-item">number of options per problem: {settings.numGivenNumbers}</li>
+        <li className="list-group-item">time for each problem: {settings.secondsEachProblem} seconds</li>
+        <li className="list-group-item">total number of problems: {settings.numProblems}</li>
+      </ul>;
     }
     return (
       <div className="row">

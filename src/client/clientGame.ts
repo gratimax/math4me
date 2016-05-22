@@ -69,7 +69,8 @@ export class ClientGame {
     public stage: GameStage.GameStage,
     public users: Array<User>,
     public socket: SocketIOClient.Socket,
-    public totalProblems: number) {}
+    public totalProblems: number,
+    public timeGiven: number) {}
 
   static getConnectUrl(): String {
     let href = window.location.href;

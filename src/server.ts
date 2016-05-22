@@ -26,7 +26,7 @@ io.on('connection', function (socket) {
   socket.on('createGame', function (data) {
     var newGame = new game.Game();
     game.addGame(newGame);
-    socket.emit('createdGame', {id: newGame.id, numProblems: constants.NUMBER_PROBLEMS});
+    socket.emit('createdGame', {id: newGame.id});
     socket.join(newGame.getRoom());
     let user = newGame.addUser(data.name);
     socketGame = newGame;
@@ -38,7 +38,7 @@ io.on('connection', function (socket) {
     if (stage instanceof game.GameStage.WaitingForUsers) {
       let settings = GameSettings.fromObject(data.settings);
       (stage as game.GameStage.WaitingForUsers).settings = settings;
-      socket.emit('settingsChanged', {settings: settings});
+      io.to(socketGame.getRoom()).emit('settingsChanged', {settings: settings});
     }
   });
 
@@ -56,8 +56,7 @@ io.on('connection', function (socket) {
         let settings = (socketGame.stage as game.GameStage.WaitingForUsers).settings;
         socket.join(joinGame.getRoom());
         let user = joinGame.addUser(data.name);
-        socket.emit('joinedGame', {userId: user.id, name: data.name, numProblems: constants.NUMBER_PROBLEMS,
-          settings: settings});
+        socket.emit('joinedGame', {userId: user.id, name: data.name, settings: settings});
         io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
       }
     }
