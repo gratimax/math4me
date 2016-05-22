@@ -22,16 +22,17 @@ interface State {
   expr: Array<{id: number, value: number}|string>,
   numberIdsUsed: Array<number>,
   prevExpr: string,
-  prevEval: any
+  prevEval: any,
+  parens: number
 }
 
-class Op extends React.Component<{handler: any, op: string}, {}> {
-  constructor(props: {handler: any, op: string}) {
+class Op extends React.Component<{handler: any, op: string, disabled: boolean}, {}> {
+  constructor(props: {handler: any, op: string, disabled: boolean}) {
     super(props);
   }
 
   render() {
-    return <button className="btn btn-success" onClick={this.props.handler}>{this.props.op}</button>;
+    return <button className="btn btn-success" onClick={this.props.handler} disabled={this.props.disabled}>{this.props.op}</button>;
   }
 }
 
@@ -58,20 +59,28 @@ export class ProblemScreen extends React.Component<Props, State> {
       expr: [],
       prevExpr: '',
       prevEval: null,
-      numberIdsUsed: []
+      numberIdsUsed: [],
+      parens: 0
     };
     return obj;
   }
 
   pressedOp(name: string) {
+    if(name == "(")
+      this.state.parens++;
+    if(name == ")")
+      this.state.parens--;
     this.state.expr.push(name);
     this.forceUpdate();
   }
 
   pressedNum(id: number, num: number) {
-    this.state.expr.push({id: id, value: num});
-    this.state.numberIdsUsed.push(id);
-    this.forceUpdate();
+    var last = this.state.expr.length == 0 ? null : this.state.expr[this.state.expr.length-1];
+    if (last == null || (typeof last == "string" && last != ")")) {
+      this.state.expr.push({id: id, value: num});
+      this.state.numberIdsUsed.push(id);
+      this.forceUpdate();
+    }
   }
 
   static getFracString(frac: any): String {
@@ -155,7 +164,11 @@ export class ProblemScreen extends React.Component<Props, State> {
         <br/>
         <div className="btn-group">
           {ops.map((op, index) => {
-            return <Op key={index} op={op} handler={this.pressedOp.bind(this, op)}/>
+            var last = this.state.expr.length == 0 ? null : this.state.expr[this.state.expr.length-1];
+            var disabled = (op == "(" && last != null && (typeof last != "string" || last == ")")) ||
+                           (op == ")" && ((typeof last == "string" && last != ")") || this.state.parens == 0)) ||
+                           (op != "(" && op != ")" && (last == null || (typeof last == "string" && last != ")")));
+            return <Op key={index} op={op} handler={this.pressedOp.bind(this, op)} disabled={disabled}/>
           })}
         </div>
         <br/>
