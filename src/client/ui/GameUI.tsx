@@ -1,6 +1,13 @@
 import * as React from "react";
 
-export default class GameUI extends React.Component<{}, {}> {
+import {StartingState} from "../startingState";
+
+interface GameUIProps {
+  startingState: StartingState
+}
+
+export default class GameUI extends React.Component<GameUIProps, {}> {
+  componentMount()
   render() {
     return (
       <nav className="navbar navbar-default navbar-inverse navbar-static-top">

@@ -1,7 +1,9 @@
-import * as socket from "socket.io-client";
+import {create as createStartingState} from "./client/startingState";
 
-import setupUI from "./ui/setup";
+import setupUI from "./client/ui/setup";
+import setupSocket, {socket} from "./client/socket";
 
-let io = socket.connect(window.location.href);
+let startingState = createStartingState(window.location.pathname);
 
-setupUI();
+setupSocket();
+setupUI(startingState);
