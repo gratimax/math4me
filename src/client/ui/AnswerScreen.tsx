@@ -1,57 +1,50 @@
 import * as React from "react";
 import {ClientGame} from "../clientGame";
 import {UserList} from "./UserList";
+import {ClientProblem} from "../clientProblem";
+var math = require('mathjs');
+math.config({
+  number: 'Fraction'
+});
 
 interface Props {
   game: ClientGame;
-  handler: (string, any) => {}
-  mainUser: boolean
+  problem: ClientProblem;
+  answer: String
 }
 
-export class StartedLobbyScreen extends React.Component<Props, {}> {
+export class AnswerScreen extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
-  }
-
-  select(event) {
-    event.target.select();
-  }
-
-  startGame() {
-    this.props.handler('startGame', {});
   }
 
   render() {
     let liGroup = null;
     if (this.props.game.users) {
-      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={false}/>
+      liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}/>
     }
-    let startGame = null;
-    if (this.props.mainUser) {
-      startGame = <button className="btn btn-primary" onClick={this.startGame.bind(this)}>Start Game</button>;
-    }
+    let problem = this.props.problem;
     return (
       <div className="row">
         <div className="col-md-4">
           <div className="panel panel-default">
             <div className="panel-heading">
-              <h3 className="panel-title">Game Controls</h3>
+              <h3 className="panel-title">Problem</h3>
             </div>
             <div className="panel-body">
               <p>
-                Link to share: <input type="text" onClick={this.select} defaultValue={this.props.game.getLink()} />
+                Goal: {problem.goal}
               </p>
-              {startGame}
             </div>
           </div>
         </div>
         <div className="col-md-4">
-          <div className="panel panel-primary">
+          <div className="panel panel-success">
             <div className="panel-heading">
-              <h3 className="panel-title">Game Lobby</h3>
+              <h3 className="panel-title">Answer</h3>
             </div>
             <div className="panel-body">
-              Waiting for game to start...
+              {this.props.answer}
             </div>
           </div>
         </div>

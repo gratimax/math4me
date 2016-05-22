@@ -8,7 +8,8 @@ export class Problem {
     public goal: any,
     public given: Array<number>,
     public expr: string,
-    public ops: string[]) {
+    public ops: string[],
+    public usersCorrect: Array<number> = []) {
     given.sort();
   }
 
@@ -26,11 +27,13 @@ export class Problem {
     var given = this.given.slice(0);
     var match;
     try {
-      match = math.eval(expr) == this.goal;
+      match = math.equal(math.eval(expr), this.goal);
     } catch(e) {
       return false;
     }
+    console.log('still-going');
     if(match) {
+      console.log('checking-toks');
       for(var i=0; i<toks.length; i++) {
         var tok = toks[i];
         if(tok != "") {
@@ -49,6 +52,16 @@ export class Problem {
       return true;
     }
     return false;
+  }
+
+  setSolved(userId: number) {
+    if (this.usersCorrect.indexOf(userId) == -1) {
+      this.usersCorrect.push(userId);
+    }
+  }
+
+  didSolve(userId: number) {
+    return this.usersCorrect.indexOf(userId) != -1;
   }
 }
 

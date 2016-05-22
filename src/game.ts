@@ -1,5 +1,6 @@
 import User from "./user";
 import * as problem from "./problem";
+import * as constants from "./constants";
 
 let gameId = 0;
 
@@ -31,7 +32,7 @@ export class Game {
   }
 
   addUser(name: string): User {
-    let newUser = new User(this.users.length, name);
+    let newUser = new User(this.users.length, name, 0);
     this.users.push(newUser);
     return newUser;
   }
@@ -45,7 +46,7 @@ export class Game {
   }
 
   makeProblem(): problem.Problem {
-    let prob = problem.getProblem(0, 10, 5);
+    let prob = problem.getProblem(0, 3, 1);
     this.stage = new GameStage.Playing(prob, new Date());
     this.round--;
     return prob;
@@ -65,7 +66,7 @@ export class Game {
 
   getScore(date: Date): number {
     let stageDate = (this.stage as GameStage.Playing).date;
-    return (date.getTime() - stageDate.getTime())/1000;
+    return constants.NUM_SECONDS_GIVEN - (date.getTime() - stageDate.getTime())/1000;
   }
 
   incrementScore(userId: number, score: number) {
@@ -74,6 +75,7 @@ export class Game {
     } else {
       this.score[userId] = score;
     }
+    return this.score[userId];
   }
 
   getUsers(): Array<{id: number, name: String}> {

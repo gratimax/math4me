@@ -36,7 +36,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
           if (obj.id == game.user.id) {
             return game.user;
           } else {
-            return new User(obj.id, obj.name);
+            return new User(obj.id, obj.name, 0);
           }
         }
       );
@@ -57,7 +57,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
           this.forceUpdate();
         });
         socket.once('joinedGame', (data) => {
-          game.user = new User(data.userId, name);
+          game.user = new User(data.userId, name, 0);
           game.stage = new GameStage.WaitingLobby();
           socket.on('allUsers', (data) => {
             onUsers(data);
@@ -72,7 +72,7 @@ class Main extends React.Component<{}, {game: ClientGame}> {
         this.forceUpdate();
         socket.once('createdGame', (data) => {
           game.id = data.id;
-          game.user = new User(0, name);
+          game.user = new User(0, name, 0);
           game.stage = new GameStage.StartedLobby();
           this.forceUpdate();
           socket.on('allUsers', (data) => {
@@ -87,20 +87,43 @@ class Main extends React.Component<{}, {game: ClientGame}> {
 
   onGameStart() {
     let game = this.state.game;
+    let socket = game.socket;
     game.stage = new GameStage.Waiting("Game is about to start!");
     this.forceUpdate();
-    game.socket.on('newProblem', (data) => {
+    socket.on('newProblem', (data) => {
       let problem = new ClientProblem(data.given, data.goal, data.ops);
       game.stage = new GameStage.DoingProblem(problem);
       this.forceUpdate();
     });
+    socket.on('answerProblem', (data) => {
+      let problem = (game.stage as GameStage.DoingProblem).problem;
+      game.stage = new GameStage.AnswerProblem(problem, data.expr);
+      this.forceUpdate();
+    });
+    socket.on('userScore', this.onUserScore.bind(this));
+  }
+
+  onUserScore(data: {userId: number, score: number}) {
+    let game = this.state.game;
+    for (var i = 0; i < game.users.length; i++) {
+      let user = game.users[i];
+      if (user.id == data.userId) {
+        user.score = data.score;
+      }
+    }
+    this.forceUpdate();
   }
 
   startGame() {
     let game = this.state.game;
     let socket = game.socket;
-    socket.on('gameStarting', this.onGameStart.bind(this))
+    socket.on('gameStarting', this.onGameStart.bind(this));
     socket.emit('startGame');
+  }
+
+  haveExpr(expr: String) {
+    let game = this.state.game;
+    game.socket.emit('entered', {userId: game.user.id, expr: expr});
   }
 
   eventHandler(evt, data) {
@@ -108,6 +131,8 @@ class Main extends React.Component<{}, {game: ClientGame}> {
       this.handleSocket(data);
     } else if (evt == 'startGame') {
       this.startGame();
+    } else if (evt == 'haveExpr') {
+      this.haveExpr(data);
     }
   }
 

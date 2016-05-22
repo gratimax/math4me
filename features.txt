@@ -1,0 +1,8 @@
+- show answer
+- end of game screen
+- configure game difficulty
+- show progress of users during problem
+- show score of users
+- input numbers/ops with keyboard
+- show which ops available
+- backspace in order

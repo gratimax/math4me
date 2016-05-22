@@ -4,6 +4,7 @@ import * as express from "express";
 import * as socketio from "socket.io";
 
 import * as game from "./game";
+import * as constants from "./constants";
 
 let app = express();
 app.use(express.static('public'));
@@ -58,7 +59,7 @@ io.on('connection', function (socket) {
       if (socketGame.canMakeProblem()) {
         let prob = socketGame.makeProblem();
         io.to(socketGame.getRoom()).emit('newProblem', {given: prob.given, goal: prob.getGoalString(), ops: prob.ops});
-        setTimeout(sendAnswer, 15 * 1000);
+        setTimeout(sendAnswer, constants.NUM_SECONDS_GIVEN * 1000);
       } else {
         socketGame.finish();
         io.to(socketGame.getRoom()).emit('finishedGame');
@@ -66,21 +67,26 @@ io.on('connection', function (socket) {
     }
     function sendAnswer() {
       io.to(socketGame.getRoom()).emit('answerProblem', {expr: socketGame.getProblemAnswer()});
-      setTimeout(newProblem, 5 * 1000);
+      setTimeout(newProblem, constants.NUM_SECONDS_ANSWER * 1000);
     }
     if (socketGame) {
       io.to(socketGame.getRoom()).emit('allUsers', {users: socketGame.getUsers()});
       io.to(socketGame.getRoom()).emit('gameStarting');
-      setTimeout(newProblem, 2 * 1000);
+      setTimeout(newProblem, constants.NUM_SECONDS_START * 1000);
     }
   });
 
   socket.on('entered', function (data) {
+    console.log('got-entered');
     let date = new Date();
     if (socketGame) {
-      if (socketGame.isRight(data.expr)) {
+      console.log(socketGame.isRight(data.expr));
+      let problem = (socketGame.stage as game.GameStage.Playing).problem;
+      if (!problem.didSolve(data.userId) && socketGame.isRight(data.expr)) {
+        problem.setSolved(data.userId);
         let score = socketGame.getScore(date);
-        socketGame.incrementScore(data.userId, score);
+        let newScore = socketGame.incrementScore(data.userId, score);
+        io.to(socketGame.getRoom()).emit('userScore', {userId: data.userId, score: newScore});
       }
     }
   });

@@ -46,6 +46,10 @@ export namespace GameStage {
     constructor(public problem: ClientProblem) {}
   }
 
+  export class AnswerProblem implements GameStage{
+    constructor(public problem: ClientProblem, public answer: string) {}
+  }
+
 }
 
 export class ClientGame {
