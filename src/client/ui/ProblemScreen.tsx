@@ -55,7 +55,7 @@ export class ProblemScreen extends React.Component<Props, State> {
 
   initialState(): State {
     let obj = {
-      kept: [],
+      expr: [],
       prevExpr: '',
       prevEval: null,
       numberIdsUsed: []
