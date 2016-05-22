@@ -157,12 +157,12 @@ export class ProblemScreen extends React.Component<Props, State> {
     if (!didISolveIt) {
       calculator = <div>
         <br/>
-        <div className="btn-group">
+        <div className="btn-group btn-group-lg">
           <button className="btn btn-warning" onClick={this.del.bind(this)}>Del</button>
           <button className="btn btn-error" onClick={this.clear.bind(this)}>Clear</button>
         </div>
         <br/>
-        <div className="btn-group">
+        <div className="btn-group btn-group-lg">
           {ops.map((op, index) => {
             var last = this.state.expr.length == 0 ? null : this.state.expr[this.state.expr.length-1];
             var disabled = (op == "(" && last != null && (typeof last != "string" || last == ")")) ||
@@ -172,7 +172,7 @@ export class ProblemScreen extends React.Component<Props, State> {
           })}
         </div>
         <br/>
-        <div className="btn-group">
+        <div className="btn-group btn-group-lg">
           {problem.given.map((num, index) => {
             let disabled = this.state.numberIdsUsed.indexOf(index) != -1;
             return <Num key={index} num={num} handler={this.pressedNum.bind(this,index, num)} disabled={disabled}/>
@@ -196,9 +196,9 @@ export class ProblemScreen extends React.Component<Props, State> {
               <h3 className="panel-title">Problem {problem.problemNumber}/{this.props.game.totalProblems}</h3>
             </div>
             <div className="panel-body">
-              <p>
+              <h3 className="no-padding-top">
                 Goal: {problem.goal}
-              </p>
+              </h3>
               <TimeProgress totalSeconds={constants.NUM_SECONDS_GIVEN}/>
             </div>
           </div>

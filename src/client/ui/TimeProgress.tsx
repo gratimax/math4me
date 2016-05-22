@@ -21,7 +21,9 @@ export class TimeProgress extends React.Component<Props, State> {
 
   componentDidMount() {
     this.state.counter = setInterval(() => {
-      this.state.secondsRemaining--;
+      if (this.state.secondsRemaining > 0) {
+        this.state.secondsRemaining--;
+      }
       this.forceUpdate();
     }, 1 * 1000);
   }

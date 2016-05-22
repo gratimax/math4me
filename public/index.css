@@ -9,3 +9,7 @@
 .winner {
   color: goldenrod;
 }
+
+.no-padding-top {
+  margin-top: 4px;
+}

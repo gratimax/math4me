@@ -31,9 +31,9 @@ export class AnswerScreen extends React.Component<Props, {}> {
               <h3 className="panel-title">Problem {problem.problemNumber}/{this.props.game.totalProblems}</h3>
             </div>
             <div className="panel-body">
-              <p>
+              <h3 className="no-padding-top">
                 Goal: {problem.goal}
-              </p>
+              </h3>
             </div>
           </div>
         </div>
