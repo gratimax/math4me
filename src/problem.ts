@@ -84,5 +84,5 @@ export var defaultTransforms = [
   new logic.OpTransform("+"),
   new logic.OpTransform("-"),
   new logic.OpTransform("*"),
-  new logic.OpTransform("/")
+  // new logic.OpTransform("/")
 ];

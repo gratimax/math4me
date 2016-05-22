@@ -19,7 +19,7 @@ interface Props {
 }
 
 interface State {
-  kept: Array<number|string>,
+  kept: Array<{id: number, value: number}|string>,
   numberIdsUsed: Array<number>
 }
 
@@ -65,7 +65,7 @@ export class ProblemScreen extends React.Component<Props, State> {
   }
 
   pressedNum(id: number, num: number) {
-    this.state.kept.push(num);
+    this.state.kept.push({id: id, value: num});
     this.state.numberIdsUsed.push(id);
     this.forceUpdate();
   }
@@ -84,10 +84,37 @@ export class ProblemScreen extends React.Component<Props, State> {
     }
   }
 
+  del() {
+    let thing = this.state.kept.pop();
+    if (typeof thing != "string") {
+      let thingId = (thing as any).id;
+      this.state.numberIdsUsed = this.state.numberIdsUsed.filter((id) => {
+        return id != thingId;
+      });
+    }
+    this.forceUpdate();
+  }
+
+  clear() {
+    this.state.kept = [];
+    this.state.numberIdsUsed = [];
+    this.forceUpdate();
+  }
+
+  keptSanitized() {
+    return this.state.kept.map((thing) => {
+      if (typeof thing == "string") {
+        return thing;
+      } else {
+        return (thing as any).value;
+      }
+    });
+  }
+
   eval() {
     if (this.state.kept.length > 0) {
       try {
-        let expr = this.state.kept.join('');
+        let expr = this.keptSanitized().join('');
         this.props.handler('haveExpr', expr);
         return ProblemScreen.getFracString(math.eval(expr));
       } catch (e) {
@@ -125,13 +152,17 @@ export class ProblemScreen extends React.Component<Props, State> {
           <div className="panel panel-primary">
             <div className="panel-body">
               <p>
-                Expression: {this.state.kept.join(' ')}
+                Expression: {this.keptSanitized().join(' ')}
               </p>
               <p>
                 Value: {this.eval()}
               </p>
               <br/>
-              
+              <div className="btn-group">
+                <button className="btn btn-warning" onClick={this.del.bind(this)}>Del</button>
+                <button className="btn btn-error" onClick={this.clear.bind(this)}>Clear</button>
+              </div>
+              <br/>
               <div className="btn-group">
                 {ops.map((op, index) => {
                   return <Op key={index} op={op} handler={this.pressedOp.bind(this, op)}/>
