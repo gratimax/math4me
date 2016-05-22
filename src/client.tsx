@@ -11,7 +11,13 @@ class Main extends React.Component<{}, {game: ClientGame}> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      game: new ClientGame(null, null, GameRole.create(), new GameStage.PromptingForName())
+      game: new ClientGame(
+        null,
+        null,
+        GameRole.create(),
+        new GameStage.PromptingForName(),
+        null
+      )
     };
   }
   
@@ -46,14 +52,18 @@ class Main extends React.Component<{}, {game: ClientGame}> {
       } else {
         game.stage = new GameStage.Waiting("trying to create game");
         this.forceUpdate();
-        console.log(game instanceof ClientGame);
         socket.once('createdGame', (data) => {
           game.id = data.id;
           game.user = new User(0, name);
           game.stage = new GameStage.StartedLobby();
           this.forceUpdate();
           socket.on('allUsers', (data) => {
-
+            game.users = data.users.map(
+              (obj: {id: number, name: String}) => {
+                return new User(obj.id, obj.name);
+              }
+            );
+            this.forceUpdate();
           });
         });
         socket.emit('createGame', {name: name});

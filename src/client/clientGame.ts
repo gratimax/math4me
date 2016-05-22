@@ -45,7 +45,8 @@ export class ClientGame {
     public id: number,
     public user: User,
     public role: GameRole.GameRole,
-    public stage: GameStage.GameStage) {}
+    public stage: GameStage.GameStage,
+    public users: Array<User>) {}
 
   static getConnectUrl(): String {
     let href = window.location.href;
