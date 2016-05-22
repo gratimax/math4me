@@ -12,6 +12,7 @@ interface DisplayProps {
   currentUser: User;
   displayScore: boolean;
   displayCrown: boolean;
+  gotIt: boolean;
 }
 
 class UserDisplay extends React.Component<DisplayProps, {}> {
@@ -31,12 +32,17 @@ class UserDisplay extends React.Component<DisplayProps, {}> {
     if (this.props.displayCrown) {
       crown = <i className="glyphicon glyphicon-sunglasses" style={{color: "gold"}}></i>;
     }
-    return <li className="list-group-item">{this.props.user.name} {you} {crown} {score}</li>;
+    let userHead = <span>{this.props.user.name} {you}</span>;
+    if (this.props.gotIt) {
+      userHead = <em>{userHead}</em>
+    }
+    return <li className="list-group-item">{userHead} {crown} {score}</li>;
   }
 }
 
 interface ListProps {
   users: Array<User>;
+  whoGotIt: Array<number>;
   currentUser: User;
   displayScore: boolean;
   displayCrown: boolean;
@@ -56,11 +62,11 @@ export class UserList extends React.Component<ListProps, {}> {
         }
       })
     }
-    console.log(crownIds);
+    let x = this.props.whoGotIt;
     return <ul className="list-group">
       {this.props.users.map((user) => {
         return <UserDisplay key={user.id} user={user} currentUser={this.props.currentUser} displayScore={this.props.displayScore}
-          displayCrown={crownIds.indexOf(user.id) != -1}/>
+          displayCrown={crownIds.indexOf(user.id) != -1} gotIt={this.props.whoGotIt.indexOf(user.id) != -1}/>
       })}
     </ul>;
   }

@@ -15,12 +15,12 @@ export class AnswerScreen extends React.Component<Props, {}> {
   }
 
   render() {
+    let problem = this.props.problem;
     let liGroup = null;
     if (this.props.game.users) {
       liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}
-        displayCrown={false}/>
+        displayCrown={false} whoGotIt={problem.whoGotIt}/>
     }
-    let problem = this.props.problem;
     return (
       <div className="row">
         <div className="col-md-4">
@@ -41,7 +41,7 @@ export class AnswerScreen extends React.Component<Props, {}> {
               <h3 className="panel-title">Answer</h3>
             </div>
             <div className="panel-body">
-              {this.props.answer}
+              <span className="calculator">{this.props.answer}</span>
             </div>
           </div>
         </div>

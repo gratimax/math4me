@@ -130,6 +130,9 @@ class Main extends React.Component<{}, {game: ClientGame}> {
 
   onUserScore(data: {userId: number, score: number}) {
     this.setUserScore(data.userId, data.score);
+    let game = this.state.game;
+    let problem = (game.stage as GameStage.DoingProblem).problem;
+    problem.whoGotIt.push(data.userId);
     this.forceUpdate();
   }
 

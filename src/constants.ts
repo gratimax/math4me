@@ -1,5 +1,5 @@
 // default 30
-export const NUM_SECONDS_GIVEN = 30;
+export const NUM_SECONDS_GIVEN = 5;
 
 // default 5
 export const NUM_SECONDS_ANSWER = 5;
@@ -17,4 +17,4 @@ export const MIN_NUM = 0;
 export const MAX_NUM = 9;
 
 // default 5
-export const NUM_OPS = 5;
+export const NUM_OPS = 2;

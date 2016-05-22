@@ -118,20 +118,20 @@ export class ProblemScreen extends React.Component<Props, State> {
         this.props.handler('haveExpr', expr);
         return ProblemScreen.getFracString(math.eval(expr));
       } catch (e) {
-        return "";
+        return "?";
       }
     } else {
-      return "";
+      return "?";
     }
   }
 
   render() {
+    let problem = this.props.problem;
     let liGroup = null;
     if (this.props.game.users) {
       liGroup = <UserList users={this.props.game.users} currentUser={this.props.game.user} displayScore={true}
-        displayCrown={false}/>
+        displayCrown={false} whoGotIt={problem.whoGotIt}/>
     }
-    let problem = this.props.problem;
     let ops = ['('].concat(problem.ops).concat([')']);
     return (
       <div className="row">
@@ -152,10 +152,7 @@ export class ProblemScreen extends React.Component<Props, State> {
           <div className="panel panel-primary">
             <div className="panel-body">
               <p>
-                Expression: {this.keptSanitized().join(' ')}
-              </p>
-              <p>
-                Value: {this.eval()}
+                <span className="calculator">{this.keptSanitized().join(' ') || "?"} => {this.eval()}</span>
               </p>
               <br/>
               <div className="btn-group">
