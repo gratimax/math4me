@@ -4,13 +4,14 @@ import * as express from "express";
 import * as socketio from "socket.io";
 
 import * as game from "./game";
+import * as messages from "./messages";
 
 let app = express();
 app.use(express.static('public'));
 
 app.get('/:id/', function (req, res) {
   let id = parseInt(req.params.id);
-  if (id in game.games) {
+  if (game.hasId(id)) {
     res.sendFile(path.join(__dirname, '../public/index.html'));
   } else {
     res.redirect('/');
@@ -28,5 +29,13 @@ io.on('connection', function (socket) {
     var newGame = new game.Game();
     game.addGame(newGame);
     socket.emit('createdGame', {id: newGame.id});
+  });
+  socket.on('joinGame', function (data) {
+    let id: number = data.id;
+    if (game.hasId(id)) {
+
+    } else {
+
+    }
   });
 });

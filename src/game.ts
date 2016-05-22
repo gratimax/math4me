@@ -18,7 +18,11 @@ export class Game {
   
 }
 
-export let games: {[id: number]: Game} = {};
+let games: {[id: number]: Game} = {};
+
+export function hasId(id: number) {
+  return id in games;
+}
 
 export function addGame(game: Game) {
   games[game.id] = game;
